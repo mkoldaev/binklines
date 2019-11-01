@@ -42,7 +42,7 @@ public class Binklines {
 		if(args.length > 0) { 
 			checkklines(args[0].toUpperCase());
 		} else {
-			out.println("необходимо задать пару");
+			out.println("РЅРµРѕР±С…РѕРґРёРјРѕ Р·Р°РґР°С‚СЊ РїР°СЂСѓ");
 		}
 	}
 
@@ -62,15 +62,15 @@ public class Binklines {
 			quote_asset_volume = item.get(7).toString();
 			count_trades = item.get(8).toString();
 			
-			print_final = "Время открытия: "+time_open;
-			print_final += ", цена открытия: "+price_open;
-			print_final += ", макс.цена: "+max_price;
-			print_final += ", мин.цена: "+low_price;
-			print_final += ", цена закрытия: "+price_close;
-			print_final += ", объем: "+volume;
-			print_final += ", время закрытия: "+time_close;
-			print_final += ", квота ордера: "+quote_asset_volume;
-			print_final += ", количество сделок: "+count_trades;
+			print_final = "Р’СЂРµРјСЏ РѕС‚РєСЂС‹С‚РёСЏ: "+time_open;
+			print_final += ", С†РµРЅР° РѕС‚РєСЂС‹С‚РёСЏ: "+price_open;
+			print_final += ", РјР°РєСЃ.С†РµРЅР°: "+max_price;
+			print_final += ", РјРёРЅ.С†РµРЅР°: "+low_price;
+			print_final += ", С†РµРЅР° Р·Р°РєСЂС‹С‚РёСЏ: "+price_close;
+			print_final += ", РѕР±СЉРµРј: "+volume;
+			print_final += ", РІСЂРµРјСЏ Р·Р°РєСЂС‹С‚РёСЏ: "+time_close;
+			print_final += ", РєРІРѕС‚Р° РѕСЂРґРµСЂР°: "+quote_asset_volume;
+			print_final += ", РєРѕР»РёС‡РµСЃС‚РІРѕ СЃРґРµР»РѕРє: "+count_trades;
 			
 			out.println(print_final);
 			out.println("");
