@@ -4,5 +4,19 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="javalibs/json-20180130.jar"/>
 	<classpathentry kind="lib" path="javalibs/unirest-java-1.4.9.jar"/>
+	<classpathentry kind="lib" path="javalibs/httpasyncclient-4.1.4.jar"/>
+	<classpathentry kind="lib" path="javalibs/httpasyncclient-cache-4.1.4.jar"/>
+	<classpathentry kind="lib" path="javalibs/httpclient-4.5.7.jar"/>
+	<classpathentry kind="lib" path="javalibs/httpclient-cache-4.5.7.jar"/>
+	<classpathentry kind="lib" path="javalibs/httpclient-osgi-4.5.7.jar"/>
+	<classpathentry kind="lib" path="javalibs/httpclient-win-4.5.7.jar"/>
+	<classpathentry kind="lib" path="javalibs/httpcore-4.4.11.jar"/>
+	<classpathentry kind="lib" path="javalibs/httpcore-ab-4.4.11.jar"/>
+	<classpathentry kind="lib" path="javalibs/httpcore-nio-4.4.10.jar"/>
+	<classpathentry kind="lib" path="javalibs/httpcore-nio-4.4.11.jar"/>
+	<classpathentry kind="lib" path="javalibs/httpcore-osgi-4.4.11.jar"/>
+	<classpathentry kind="lib" path="javalibs/httpmime-4.5.7.jar"/>
+	<classpathentry kind="lib" path="javalibs/commons-codec-1.11.jar"/>
+	<classpathentry kind="lib" path="javalibs/commons-logging-1.2.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
