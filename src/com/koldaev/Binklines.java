@@ -25,6 +25,7 @@ public class Binklines {
 	protected static String quote = "USD";
 	protected static String interval = "1d";
 	protected static String limit = "30";
+	protected static String json_para, json_symbol;
 	
 	public static void main(String[] args) throws JSONException, IOException, InterruptedException, UnirestException {
 		if(args.length > 1) {
@@ -49,7 +50,16 @@ public class Binklines {
 		url_api += para + "&interval=" + interval + "&limit=" + limit;
 		HttpResponse<JsonNode> request = Unirest.get(url_api).asJson();
 		JSONArray results = request.getBody().getArray();
-		out.println(results);
+		results.forEach(item -> { 
+		    //JSONObject obj = (JSONObject) item;
+		    out.println(item);
+		    //String para = obj.getString("symbol").intern();
+		    //String price = obj.getString("last").intern();
+		    //out.println(para+":"+price);
+		    //allparamap.put(para, price);
+		    //if(!allaparas.equals(para)) 
+		    //allaparas.add(para);
+		});
 	}
 
 }
