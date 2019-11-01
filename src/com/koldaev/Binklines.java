@@ -67,6 +67,10 @@ public class Binklines {
 			print_final += ", макс.цена: "+max_price;
 			print_final += ", мин.цена: "+low_price;
 			print_final += ", цена закрытия: "+price_close;
+			print_final += ", объем: "+volume;
+			print_final += ", время закрытия: "+time_close;
+			print_final += ", квота ордера: "+quote_asset_volume;
+			print_final += ", количество сделок: "+count_trades;
 			
 			out.println(print_final);
 			out.println("");
