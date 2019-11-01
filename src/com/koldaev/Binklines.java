@@ -25,7 +25,7 @@ public class Binklines {
 	protected static String quote = "USD";
 	protected static String interval = "1d";
 	protected static String limit = "30";
-	protected static String json_para, json_symbol;
+	protected static String time_open, price_open, max_price, low_price, price_close, volume, time_close, quote_asset_volume, count_trades, print_final;
 	
 	public static void main(String[] args) throws JSONException, IOException, InterruptedException, UnirestException {
 		if(args.length > 1) {
@@ -50,15 +50,27 @@ public class Binklines {
 		url_api += para + "&interval=" + interval + "&limit=" + limit;
 		HttpResponse<JsonNode> request = Unirest.get(url_api).asJson();
 		JSONArray results = request.getBody().getArray();
-		results.forEach(item -> { 
-		    //JSONObject obj = (JSONObject) item;
-		    out.println(item);
-		    //String para = obj.getString("symbol").intern();
-		    //String price = obj.getString("last").intern();
-		    //out.println(para+":"+price);
-		    //allparamap.put(para, price);
-		    //if(!allaparas.equals(para)) 
-		    //allaparas.add(para);
+		results.forEach(items -> { 
+			JSONArray item = (JSONArray) items;
+			time_open = item.get(0).toString();
+			price_open = item.get(1).toString();
+			max_price = item.get(2).toString();
+			low_price = item.get(3).toString();
+			price_close = item.get(4).toString();
+			volume = item.get(5).toString();
+			time_close = item.get(6).toString();
+			quote_asset_volume = item.get(7).toString();
+			count_trades = item.get(8).toString();
+			
+			print_final = "Время открытия: "+time_open;
+			print_final += ", цена открытия: "+price_open;
+			print_final += ", макс.цена: "+max_price;
+			print_final += ", мин.цена: "+low_price;
+			print_final += ", цена закрытия: "+price_close;
+			
+			out.println(print_final);
+			out.println("");
+
 		});
 	}
 
