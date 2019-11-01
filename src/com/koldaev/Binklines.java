@@ -28,7 +28,7 @@ public class Binklines {
 	
 	public static void main(String[] args) throws JSONException, IOException, InterruptedException, UnirestException {
 		if(args.length > 1) {
-			interval = args[1];
+			interval = args[1]; 
 			switch(interval) {
 				case "1h":
 					limit = "24";
@@ -38,7 +38,7 @@ public class Binklines {
 					break;
 			}
 		}
-		if(args.length > 0) {
+		if(args.length > 0) { 
 			checkklines(args[0].toUpperCase());
 		} else {
 			out.println("необходимо задать пару");
