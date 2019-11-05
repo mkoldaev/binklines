@@ -19,5 +19,6 @@
 	<classpathentry kind="lib" path="javalibs/commons-codec-1.11.jar"/>
 	<classpathentry kind="lib" path="javalibs/commons-logging-1.2.jar"/>
 	<classpathentry kind="lib" path="javalibs/mysql-connector-java-8.0.11.jar"/>
+	<classpathentry kind="lib" path="javalibs/commons-collections4-4.1.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

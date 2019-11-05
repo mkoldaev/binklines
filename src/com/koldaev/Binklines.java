@@ -1,6 +1,12 @@
 package com.koldaev;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.net.URL;
+import java.nio.charset.Charset;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -8,11 +14,16 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Properties;
 import java.util.TimeZone;
+
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
+
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
@@ -27,16 +38,19 @@ public class Binklines {
 	
 	protected static long timeInSec1;
 	protected static String url_api = "https://api.binance.com/api/v1/klines?symbol=";
+	protected static String url_info = "https://api.binance.com/api/v1/exchangeInfo";
 	protected static String quote = "USD";
 	protected static String interval = "1d";
 	protected static String limit = "30";
-	protected static String insmysql, time_open_norm, time_close_norm;
+	protected static String insmysql, insmysql_paras, time_open_norm, time_close_norm;
 	protected static String para, price_open, max_price, low_price, price_close, volume, quote_asset_volume, count_trades, print_final;
 	protected static long time_open, time_close;
 	protected static int time_open_int;
-	static Statement st;
+	static Statement st, st_paras;
+	protected static BufferedReader rd;
+	protected static ArrayList<String> showparas = new ArrayList<String>();
 	
-	static Connection conn  = null;
+	static Connection conn, conn_paras  = null;
 	static Properties connInfo = new Properties();
 	static {
 		connInfo.put("characterEncoding","UTF8");
@@ -44,9 +58,16 @@ public class Binklines {
 		connInfo.put("password", "vnfhry46");
 	}
 	
-	public static void main(String[] args) throws JSONException, IOException, InterruptedException, UnirestException, SQLException {
+	public static void main(String[] args) throws JSONException, IOException, InterruptedException, UnirestException, SQLException, NullPointerException {
+
+	
 		conn = DriverManager.getConnection("jdbc:mysql://localhost/klines?useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC", connInfo);
 		out.println("first start");
+
+		//информацию по доступным парам получаем только раз в сутки
+		conn_paras = DriverManager.getConnection("jdbc:mysql://localhost/klines?useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC", connInfo);
+		getparas();
+		System.exit(0);
 		
 		if(args.length > 1) interval = args[1];
 		if(args.length == 2) {
@@ -72,13 +93,47 @@ public class Binklines {
 		if(args.length > 0) { 
 			para = args[0].toUpperCase();
 			out.println("смотрим "+para);
-			checkklines(para);
+			//checkklines(para);
 		} else {
 			out.println("без явного задания пары смотрим BTCUSDT");
-			checkklines("BTCUSDT");
+			//checkklines("BTCUSDT");
 		}
 	}
 	
+	private static void getparas() throws JSONException, IOException, SQLException, NullPointerException {
+		try {
+			st_paras=conn.createStatement();
+		} catch (SQLException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+			out.println(e1.getMessage());
+		}
+		JSONObject json = readJsonFromUrl(url_info);
+		JSONArray res = json.getJSONArray("symbols");
+		res.forEach(item -> { 
+			insmysql_paras = "INSERT INTO `paras` (`para`, `status`, `quoteAsset`, `baseAsset`) VALUES ";
+		    JSONObject obj = (JSONObject) item;
+		    String para = obj.getString("symbol").intern();
+		    String status = obj.getString("status").intern();
+		    String quoteAsset = obj.getString("quoteAsset").intern();
+		    String baseAsset = obj.getString("baseAsset").intern();
+		    //if(status == "TRADING") showparas.add(para); //пока со всеми статусами получаем
+		    showparas.add(para);
+		    insmysql_paras += "(\""+para+"\",\""+status+"\",\""+quoteAsset+"\",\""+baseAsset+"\");";
+		    out.println(insmysql_paras);
+		    try {
+				st_paras.execute(insmysql_paras);
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (NullPointerException n) {
+				out.println(n.getMessage());
+			}
+		    
+		});
+		out.println(showparas);
+	}
+
 	public static String convertSecondsToHMmSs(long millis) {
 		//out.println(millis);
 		Date date = new Date(millis);
@@ -142,5 +197,27 @@ public class Binklines {
 
 		});
 	}
+	
+	protected static JSONObject readJsonFromUrl(String url) throws IOException, JSONException {
+	    InputStream is = new URL(url).openStream();
+	    try {
+	      rd = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
+	      String jsonText = readAll(rd);
+	      JSONObject json = new JSONObject(jsonText);
+	      return json;
+	    } finally {
+	      is.close();
+	      rd.close();
+	    }
+	  }
+	
+	protected static String readAll(Reader rd) throws IOException {
+	    StringBuilder sb = new StringBuilder();
+	    int cp;
+	    while ((cp = rd.read()) != -1) {
+	      sb.append((char) cp);
+	    }
+	    return sb.toString();
+	  }
 
 }
