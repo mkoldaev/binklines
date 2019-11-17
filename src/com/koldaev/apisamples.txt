@@ -1,0 +1,7 @@
+
+
+https://api.binance.com/api/v1/klines?symbol=RLCUSDT&interval=1d&limit=400&startTime=1573862400000
+https://api.binance.com/api/v1/klines?symbol=RLCUSDT&interval=1d&limit=400&startTime=1573862400001
+
+https://api.binance.com/api/v1/klines?symbol=RLCUSDT&interval=1d&limit=400&endTime=1573862400000
+https://api.binance.com/api/v1/klines?symbol=RLCUSDT&interval=1d&limit=400&endTime=1573862399999

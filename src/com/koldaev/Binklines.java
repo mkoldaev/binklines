@@ -19,6 +19,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Properties;
 import java.util.TimeZone;
+import java.util.concurrent.TimeUnit;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -50,9 +51,12 @@ public class Binklines {
 	protected static BufferedReader rd;
 	protected static ArrayList<String> showparas = new ArrayList<String>();
 	
-	static PreparedStatement paranames = null;
-	static ResultSet paranamesresult   = null;
-	static Connection conn, conn_paras  = null;
+	static PreparedStatement paranames, paralast = null;
+	static ResultSet paranamesresult, paralastresult   = null;
+	
+	
+	
+	static Connection conn, conn_paras, conn_last  = null;
 	static Properties connInfo = new Properties();
 	static {
 		connInfo.put("characterEncoding","UTF8");
@@ -68,6 +72,7 @@ public class Binklines {
 
 		//информацию по доступным парам получаем только раз в сутки
 		conn_paras = DriverManager.getConnection("jdbc:mysql://localhost/klines?useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC", connInfo);
+		conn_last = DriverManager.getConnection("jdbc:mysql://localhost/klines?useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC", connInfo);
 		//getparas(); //этот метод запускается только раз в сутки после truncate таблицы paras
 		getparasfrommysql();		
 		System.exit(0);
@@ -103,13 +108,32 @@ public class Binklines {
 		}
 	}
 	
-	private static void getparasfrommysql() throws SQLException {
+	private static void getparasfrommysql() throws SQLException, InterruptedException, NullPointerException, UnirestException {
 		// TODO Auto-generated method stub
 		paranames = conn_paras.prepareStatement("SELECT para FROM paras");
 		if (paranames.execute()) {
 			paranamesresult = paranames.getResultSet();
         	while(paranamesresult.next()) {
-        		out.println(paranamesresult.getString("para"));
+        		
+        		TimeUnit.MILLISECONDS.sleep(500);
+        		para = paranamesresult.getString("para");
+        		out.println("тянем пару "+para);
+        		interval = "1d";
+        		limit = "400";
+        		
+        		String mysqllast = "SELECT * FROM klines.kline_1d where para = \"" + para + "\" order by open_milliseconds desc LIMIT 1";
+        		out.println(mysqllast);
+        		paralast = conn_last.prepareStatement(mysqllast);
+        		if (paralast.execute()) {
+        			paralastresult = paralast.getResultSet();
+        			while(paralastresult.next()) {
+        				int lasttime = Integer.parseInt(paralastresult.getString("open_milliseconds"));
+        				lasttime++;
+        				out.println(lasttime);
+        			}
+        		}
+        		//checkklines(para);
+        		
         	}
 		}
 	}
@@ -157,9 +181,14 @@ public class Binklines {
 	}
 
 	private static void checkklines(String para) throws UnirestException, NullPointerException {
+		
+		url_api = "https://api.binance.com/api/v1/klines?symbol=";
 		url_api += para + "&interval=" + interval + "&limit=" + limit;
 		HttpResponse<JsonNode> request = Unirest.get(url_api).asJson();
 		JSONArray results = request.getBody().getArray();
+		
+		out.println(url_api);
+		out.println(results);
 		
 		results.forEach(items -> { 
 			JSONArray item = (JSONArray) items;
