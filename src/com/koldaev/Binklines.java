@@ -50,6 +50,8 @@ public class Binklines {
 	protected static BufferedReader rd;
 	protected static ArrayList<String> showparas = new ArrayList<String>();
 	
+	static PreparedStatement paranames = null;
+	static ResultSet paranamesresult   = null;
 	static Connection conn, conn_paras  = null;
 	static Properties connInfo = new Properties();
 	static {
@@ -66,7 +68,8 @@ public class Binklines {
 
 		//информацию по доступным парам получаем только раз в сутки
 		conn_paras = DriverManager.getConnection("jdbc:mysql://localhost/klines?useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC", connInfo);
-		getparas();
+		//getparas(); //этот метод запускается только раз в сутки после truncate таблицы paras
+		getparasfrommysql();		
 		System.exit(0);
 		
 		if(args.length > 1) interval = args[1];
@@ -100,6 +103,17 @@ public class Binklines {
 		}
 	}
 	
+	private static void getparasfrommysql() throws SQLException {
+		// TODO Auto-generated method stub
+		paranames = conn_paras.prepareStatement("SELECT para FROM paras");
+		if (paranames.execute()) {
+			paranamesresult = paranames.getResultSet();
+        	while(paranamesresult.next()) {
+        		out.println(paranamesresult.getString("para"));
+        	}
+		}
+	}
+
 	private static void getparas() throws JSONException, IOException, SQLException, NullPointerException {
 		try {
 			st_paras=conn.createStatement();
@@ -111,25 +125,24 @@ public class Binklines {
 		JSONObject json = readJsonFromUrl(url_info);
 		JSONArray res = json.getJSONArray("symbols");
 		res.forEach(item -> { 
-			insmysql_paras = "INSERT INTO `paras` (`para`, `status`, `quoteAsset`, `baseAsset`) VALUES ";
 		    JSONObject obj = (JSONObject) item;
 		    String para = obj.getString("symbol").intern();
 		    String status = obj.getString("status").intern();
 		    String quoteAsset = obj.getString("quoteAsset").intern();
 		    String baseAsset = obj.getString("baseAsset").intern();
-		    //if(status == "TRADING") showparas.add(para); //пока со всеми статусами получаем
-		    showparas.add(para);
-		    insmysql_paras += "(\""+para+"\",\""+status+"\",\""+quoteAsset+"\",\""+baseAsset+"\");";
-		    out.println(insmysql_paras);
-		    try {
-				st_paras.execute(insmysql_paras);
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (NullPointerException n) {
-				out.println(n.getMessage());
-			}
-		    
+		    if(status == "TRADING" && (quoteAsset == "USDT" || quoteAsset == "BTC")) {
+		    	showparas.add(para); //получаем только пары живые с торгами
+		    	insmysql_paras = "INSERT INTO `paras` (`para`, `status`, `quoteAsset`, `baseAsset`) VALUES ";
+			    insmysql_paras += "(\""+para+"\",\""+status+"\",\""+quoteAsset+"\",\""+baseAsset+"\");";
+			    try {
+					st_paras.execute(insmysql_paras);
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (NullPointerException n) {
+					out.println(n.getMessage());
+				}
+		    }
 		});
 		out.println(showparas);
 	}
