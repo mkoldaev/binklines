@@ -114,28 +114,91 @@ public class Binklines {
 		if (paranames.execute()) {
 			paranamesresult = paranames.getResultSet();
         	while(paranamesresult.next()) {
-        		
+        		Long lasttime = 0L;
         		TimeUnit.MILLISECONDS.sleep(500);
         		para = paranamesresult.getString("para");
         		out.println("тянем пару "+para);
-        		interval = "1d";
+        		//ниже меняем интервал для последовательного заполнения статистики
+        		//interval = "1d";
+        		interval = "1h";
         		limit = "400";
         		
-        		String mysqllast = "SELECT * FROM klines.kline_1d where para = \"" + para + "\" order by open_milliseconds desc LIMIT 1";
+        		String mysqllast = "SELECT * FROM klines.kline_" + interval.toLowerCase() + " where para = \"" + para + "\" order by open_milliseconds desc LIMIT 1";
         		out.println(mysqllast);
         		paralast = conn_last.prepareStatement(mysqllast);
         		if (paralast.execute()) {
         			paralastresult = paralast.getResultSet();
         			while(paralastresult.next()) {
-        				int lasttime = Integer.parseInt(paralastresult.getString("open_milliseconds"));
-        				lasttime++;
+        				lasttime = Long.parseLong(paralastresult.getString("open_milliseconds"));
+        				lasttime += 0000000000001L;
         				out.println(lasttime);
         			}
         		}
-        		//checkklines(para);
-        		
+				checkklines(para,lasttime);
         	}
 		}
+	}
+	
+private static void checkklines(String para, Long starttime) throws UnirestException, NullPointerException, InterruptedException {
+		
+		url_api = "https://api.binance.com/api/v1/klines?symbol=";
+		url_api += para + "&interval=" + interval + "&limit=" + limit;
+		if(starttime > 0) url_api += "&startTime="+starttime;
+		HttpResponse<JsonNode> request = Unirest.get(url_api).asJson();
+		JSONArray results = request.getBody().getArray();
+		
+		out.println(url_api);
+		//TimeUnit.SECONDS.sleep(1);
+		out.println(results);
+		
+		results.forEach(items -> { 
+			JSONArray item = (JSONArray) items;
+			time_open = (long) item.get(0);
+			price_open = item.get(1).toString();
+			max_price = item.get(2).toString();
+			low_price = item.get(3).toString();
+			price_close = item.get(4).toString();
+			volume = item.get(5).toString();
+			time_close = (long) item.get(6);
+			quote_asset_volume = item.get(7).toString();
+			count_trades = item.get(8).toString();
+			
+			try {
+				st=conn.createStatement();
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			insmysql = "INSERT INTO `kline_"+interval.toLowerCase()+"` (`para`, `time_open`, `time_close`, `price_open`, `max_price`, `low_price`, `price_close`, `volume`, `count_trades`, `open_milliseconds`) VALUES ";
+			time_open_norm = convertSecondsToHMmSs(time_open);
+			time_close_norm = convertSecondsToHMmSs(time_close);
+			time_open_int = (int) (time_open/1000);
+			
+			print_final = "Открытие в "+time_open_norm;
+			print_final += ", откр цена: "+price_open;
+			print_final += ", макс.цена: "+max_price;
+			print_final += ", мин.цена: "+low_price;
+			print_final += ", закр цена : "+price_close;
+			print_final += ", объем: "+volume;
+			print_final += ", закрытие в "+time_close_norm;
+			//print_final += ", квота ордера: "+quote_asset_volume;
+			print_final += ", сделки: "+count_trades;
+			
+			out.println(print_final);
+			
+			insmysql += "(\""+para+"\",\""+time_open_norm+"\",\""+time_close_norm+"\",\""+price_open+"\",\""+max_price+"\",\""+low_price+"\",\""+price_close+"\",\""+volume+"\",\""+item.get(7).toString()+"\","+time_open+");";
+			out.println(insmysql);
+			try {
+				st.execute(insmysql);
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				out.println(e.getMessage());
+			} catch (NullPointerException n) {
+				out.println(n.getMessage());
+			}
+			out.println("");
+
+		});
 	}
 
 	private static void getparas() throws JSONException, IOException, SQLException, NullPointerException {
@@ -180,66 +243,6 @@ public class Binklines {
 		return formatted;
 	}
 
-	private static void checkklines(String para) throws UnirestException, NullPointerException {
-		
-		url_api = "https://api.binance.com/api/v1/klines?symbol=";
-		url_api += para + "&interval=" + interval + "&limit=" + limit;
-		HttpResponse<JsonNode> request = Unirest.get(url_api).asJson();
-		JSONArray results = request.getBody().getArray();
-		
-		out.println(url_api);
-		out.println(results);
-		
-		results.forEach(items -> { 
-			JSONArray item = (JSONArray) items;
-			time_open = (long) item.get(0);
-			price_open = item.get(1).toString();
-			max_price = item.get(2).toString();
-			low_price = item.get(3).toString();
-			price_close = item.get(4).toString();
-			volume = item.get(5).toString();
-			time_close = (long) item.get(6);
-			quote_asset_volume = item.get(7).toString();
-			count_trades = item.get(8).toString();
-			
-			try {
-				st=conn.createStatement();
-			} catch (SQLException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-			insmysql = "INSERT INTO `kline_"+interval.toLowerCase()+"` (`para`, `time_open`, `time_close`, `price_open`, `max_price`, `low_price`, `price_close`, `volume`, `count_trades`, `open_milliseconds`) VALUES ";
-			time_open_norm = convertSecondsToHMmSs(time_open);
-			time_close_norm = convertSecondsToHMmSs(time_close);
-			time_open_int = (int) (time_open/1000);
-			
-			print_final = "Открытие в "+time_open_norm;
-			print_final += ", откр цена: "+price_open;
-			print_final += ", макс.цена: "+max_price;
-			print_final += ", мин.цена: "+low_price;
-			print_final += ", закр цена : "+price_close;
-			print_final += ", объем: "+volume;
-			print_final += ", закрытие в "+time_close_norm;
-			//print_final += ", квота ордера: "+quote_asset_volume;
-			print_final += ", сделки: "+count_trades;
-			
-			out.println(print_final);
-			
-			insmysql += "(\""+para+"\",\""+time_open_norm+"\",\""+time_close_norm+"\",\""+price_open+"\",\""+max_price+"\",\""+low_price+"\",\""+price_close+"\",\""+volume+"\",\""+item.get(7).toString()+"\","+time_open_int+");";
-			out.println(insmysql);
-			try {
-				st.execute(insmysql);
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				out.println(e.getMessage());
-			} catch (NullPointerException n) {
-				out.println(n.getMessage());
-			}
-			out.println("");
-
-		});
-	}
-	
 	protected static JSONObject readJsonFromUrl(String url) throws IOException, JSONException {
 	    InputStream is = new URL(url).openStream();
 	    try {
