@@ -35,7 +35,7 @@ CREATE TABLE `kline_15m` (
   `count_trades` varchar(90) DEFAULT NULL,
   `open_milliseconds` bigint(15) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=146218 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -81,7 +81,7 @@ CREATE TABLE `kline_1h` (
   `count_trades` varchar(90) DEFAULT NULL,
   `open_milliseconds` bigint(15) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=139643 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -105,6 +105,29 @@ CREATE TABLE `kline_1m` (
   `open_milliseconds` bigint(15) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4881 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `kline_1min`
+--
+
+DROP TABLE IF EXISTS `kline_1min`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `kline_1min` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `para` varchar(45) DEFAULT NULL,
+  `time_open` varchar(45) DEFAULT NULL,
+  `time_close` varchar(45) DEFAULT NULL,
+  `price_open` varchar(45) DEFAULT NULL,
+  `max_price` varchar(45) DEFAULT NULL,
+  `low_price` varchar(45) DEFAULT NULL,
+  `price_close` varchar(45) DEFAULT NULL,
+  `volume` varchar(90) DEFAULT NULL,
+  `count_trades` varchar(90) DEFAULT NULL,
+  `open_milliseconds` bigint(15) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=285406 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -150,7 +173,7 @@ CREATE TABLE `kline_4h` (
   `count_trades` varchar(90) DEFAULT NULL,
   `open_milliseconds` bigint(15) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=132614 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -173,7 +196,7 @@ CREATE TABLE `kline_5m` (
   `count_trades` varchar(90) DEFAULT NULL,
   `open_milliseconds` bigint(15) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=141885 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -202,4 +225,4 @@ CREATE TABLE `paras` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2020-02-18 16:00:53
+-- Dump completed on 2020-02-18 21:41:16

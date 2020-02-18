@@ -30,6 +30,7 @@ import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
+import com.sun.org.apache.xpath.internal.operations.Plus;
 
 import static java.lang.System.out;
 
@@ -42,7 +43,7 @@ public class Binklines {
 	protected static String url_api = "https://api.binance.com/api/v1/klines?symbol=";
 	protected static String url_info = "https://api.binance.com/api/v1/exchangeInfo";
 	protected static String quote = "USD";
-	protected static String interval = "4h"; //5m 15m 1h 4h 1d 1w 1M
+	protected static String interval = "1h"; //1min 5m 15m 1h 4h 1d 1w 1M
 	protected static String limit = "500"; // лимит по кол-ву свечей
 	protected static String insmysql, insmysql_paras, time_open_norm, time_close_norm;
 	protected static String para, price_open, max_price, low_price, price_close, volume, quote_asset_volume, count_trades, print_final;
@@ -51,6 +52,15 @@ public class Binklines {
 	static Statement st, st_paras;
 	protected static BufferedReader rd;
 	protected static ArrayList<String> showparas = new ArrayList<String>();
+
+	protected static long min_milis = 0000000000001L;
+	protected final static long plus_1d  = Long.parseLong("0000086400000");
+	protected final static long plus_4h  = 0000014400000L;
+	protected final static long plus_1h  = 0000003600000L;
+	protected final static long plus_15m = Long.parseLong("0000000900000");
+	protected final static long plus_5m  = 0000000300000L;
+	protected final static long plus_1m  = 0000000060000L;
+	protected static String intervaltobase, intervaltoapi;
 
 	static PreparedStatement paranames, paralast = null;
 	static ResultSet paranamesresult, paralastresult = null;
@@ -119,49 +129,22 @@ public class Binklines {
 	private static boolean getcurrenttime(long basemillis) {
 
 		long currentmiisecunds = System.currentTimeMillis(); // 13 знаков
-		long unixTime = currentmiisecunds / 1000L; // 10 знаков
+		long lastmilisbase = basemillis -= min_milis;
 		boolean needbin = false;
-		
 		Date currentDate = new Date(currentmiisecunds);
 		DateFormat df_year = new SimpleDateFormat("YYYY");
 		DateFormat df_month = new SimpleDateFormat("M");
 		DateFormat df_week = new SimpleDateFormat("w");
-		DateFormat df_day = new SimpleDateFormat("d");
-		DateFormat df_hour = new SimpleDateFormat("H");
-		DateFormat df_minute = new SimpleDateFormat("m");
-		
 		int int_year = Integer.parseInt(df_year.format(currentDate));
 		int int_month = Integer.parseInt(df_month.format(currentDate));
 		int int_week = Integer.parseInt(df_week.format(currentDate));
-		int int_day = Integer.parseInt(df_day.format(currentDate));
-		int int_hour = Integer.parseInt(df_hour.format(currentDate));
-		int int_minute = Integer.parseInt(df_minute.format(currentDate));
-		
 		int base_year = Integer.parseInt(df_year.format(basemillis));
 		int base_month = Integer.parseInt(df_month.format(basemillis));
 		int base_week = Integer.parseInt(df_week.format(basemillis));
-		int base_day = Integer.parseInt(df_day.format(basemillis));
-		int base_hour = Integer.parseInt(df_hour.format(basemillis));
-		int base_minute = Integer.parseInt(df_minute.format(basemillis));
 		
-		out.println("текущий год: "+int_year);
-		out.println("текущий месяц: "+int_month);
-		out.println("текущая неделя: "+int_week);
-		out.println("текущий день: "+int_day);
-		out.println("текущий час: "+int_hour);
-		out.println("текущая минута: "+int_minute);
+		out.println("текущие мили: "+currentmiisecunds);
 		
-		out.println("");
-		
-		out.println("крайний год в базе: "+base_year);
-		out.println("крайний месяц в базе: "+base_month);
-		out.println("крайняя неделя в базе: "+base_week);
-		out.println("крайний день в базе: "+base_day);
-		out.println("крайний час в базе: "+base_hour);
-		out.println("крайняя минута в базе: "+base_minute);
-		
-		out.println("");
-		
+		//здесь в минутах и 4h свечах должно быть интервальное округление для сравнения, учитывая год и еще час - в 15 или 5 минут
 		switch (interval) {
 			case "1M":
 				if((int_year == base_year) & (int_month == base_month)) { out.println("месяц совпадает, бин не получаем"); } else { out.println("месяц НЕ совпадает, смотрим бин"); needbin = true; }
@@ -170,32 +153,43 @@ public class Binklines {
 				if((int_year == base_year) & (int_week == base_week)) { out.println("неделя совпадает, бин не получаем"); } else { out.println("неделя НЕ совпадает, смотрим бин"); needbin = true; }
 			break;
 			case "1d":
-				if((int_year == base_year) & (int_day == base_day)) { out.println("день совпадает, бин не получаем"); } else { out.println("день НЕ совпадает, смотрим бин"); needbin = true; }
-			break;
-			case "4h":
-				if((int_year == base_year) & (int_hour == base_hour)) { out.println("час совпадает, бин не получаем"); } else { out.println("час НЕ совпадает, смотрим бин"); needbin = true; }
+				lastmilisbase += plus_1d;
+				out.println("крайние доступные мили в базе: " + lastmilisbase);
+				if(currentmiisecunds <= lastmilisbase) { out.println("день совпадает, бин не получаем"); } else { out.println("день НЕ совпадает, смотрим бин"); needbin = true; }
 			break;
 			case "1h":
-				if((int_year == base_year) & (int_hour == base_hour)) { out.println("час совпадает, бин не получаем"); } else { out.println("час НЕ совпадает, смотрим бин"); needbin = true; }
+				lastmilisbase += plus_1h;
+				out.println("крайние доступные мили в базе: " + lastmilisbase);
+				if(currentmiisecunds <= lastmilisbase) { out.println("час совпадает, бин не получаем"); } else { out.println("час НЕ совпадает, смотрим бин"); needbin = true; }
+			break;
+			case "4h":
+				lastmilisbase += plus_4h;
+				out.println("крайние доступные мили в базе: " + lastmilisbase);
+				if(currentmiisecunds <= lastmilisbase) { out.println("4-й час совпадает, бин не получаем"); } else { out.println("4-й час НЕ совпадает, смотрим бин"); needbin = true; }
 			break;
 			case "15m":
-				if((int_year == base_year) & (int_minute == base_minute)) { out.println("минута совпадает, бин не получаем"); } else { out.println("минута НЕ совпадает, смотрим бин"); needbin = true; }
+				lastmilisbase += plus_15m;
+				out.println("крайние доступные мили в базе: " + lastmilisbase);
+				if(currentmiisecunds <= lastmilisbase) { out.println("15-я минута совпадает, бин не получаем"); } else { out.println("15-я минута НЕ совпадает, смотрим бин"); needbin = true; }
 			break;
 			case "5m":
-				if((int_year == base_year) & (int_minute == base_minute)) { out.println("минута совпадает, бин не получаем"); } else { out.println("минута НЕ совпадает, смотрим бин"); needbin = true; }
+				lastmilisbase += plus_5m;
+				out.println("крайние доступные мили в базе: " + lastmilisbase);
+				if(currentmiisecunds <= lastmilisbase) { out.println("5-я минута совпадает, бин не получаем"); } else { out.println("5-я минута НЕ совпадает, смотрим бин"); needbin = true; }
+			break;
+			case "1min":
+				lastmilisbase += plus_1m;
+				out.println("крайние доступные мили в базе: " + lastmilisbase);
+				if(currentmiisecunds <= lastmilisbase) { out.println("минута совпадает, бин не получаем"); } else { out.println("минута НЕ совпадает, смотрим бин"); needbin = true; }
 			break;
 		}
-
+		
 		// проверяем здесь https://www.unixtimestamp.com
 		// на примере 1580515200000 - 01.02.2020
 		// текущее значение 1582014462597
 		out.println("");
-		//out.println("Binance milliseconds: " + currentmiisecunds);
-		//out.println("Обычный UnixTime: " + unixTime);
-		// здесь нужно сравнивать интервал
-		//out.println(needbin);
-		
 		return needbin;
+		
 	}
 
 	private static void getparasfrommysql()
@@ -222,7 +216,7 @@ public class Binklines {
 						base_lasttime = Long.parseLong(paralastresult.getString("open_milliseconds"));
 						// здесь вычисляется последняя миллисекунда в статистике из базы и специально
 						// инкрементируется, чтобы повторно не вставлять уже имеющиеся данные
-						lasttime = base_lasttime += 0000000000001L;
+						lasttime = base_lasttime += min_milis;
 						//out.println(lasttime);
 					}
 				}
@@ -231,8 +225,9 @@ public class Binklines {
 				// посылаем лишний запрос на бин
 				// сначала достаем текущее время
 				if(getcurrenttime(base_lasttime)) checkklines(para,lasttime);
+
 				// пока только имитируем запрос к бину
-				//testcheckklines(para,lasttime);
+				//if(getcurrenttime(base_lasttime)) testcheckklines(para,lasttime);
 			}
 		}
 	}
@@ -246,16 +241,15 @@ public class Binklines {
 
 	//startTime 1580515200001 соответствует 1 февраля 2020 года. Для unixtime нужно убавлять 3 посл.символа, т.е. 1580515200
     //данные приходят начиная с самой древней даты, поэтому нужно при вставке проверять на уникальность ?? на самом деле нет
-	private static void checkklines(String para, Long starttime)
-			throws UnirestException, NullPointerException, InterruptedException {
+	private static void checkklines(String para, Long starttime) throws UnirestException, NullPointerException, InterruptedException {
 		
 		TimeUnit.MILLISECONDS.sleep(500); // здесь задержка в полсекунды; наверно, чтобы по api не заблочили
 		out.println("Вызываем пару "+para+ " с милями "+starttime+ " и интервалом "+interval);
 
+		intervaltoapi = interval; if(interval == "1min") intervaltoapi = "1m";
 		url_api = "https://api.binance.com/api/v1/klines?symbol=";
-		url_api += para + "&interval=" + interval + "&limit=" + limit;
-		if (starttime > 0)
-			url_api += "&startTime=" + starttime;
+		url_api += para + "&interval=" + intervaltoapi + "&limit=" + limit;
+		if (starttime > 0) url_api += "&startTime=" + starttime;
 		HttpResponse<JsonNode> request = Unirest.get(url_api).asJson();
 		JSONArray results = request.getBody().getArray();
 
@@ -281,8 +275,8 @@ public class Binklines {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
-			insmysql = "INSERT INTO `kline_" + interval.toLowerCase()
-					+ "` (`para`, `time_open`, `time_close`, `price_open`, `max_price`, `low_price`, `price_close`, `volume`, `count_trades`, `open_milliseconds`) VALUES ";
+			intervaltobase = interval.toLowerCase();
+			insmysql = "INSERT INTO `kline_" + intervaltobase + "` (`para`, `time_open`, `time_close`, `price_open`, `max_price`, `low_price`, `price_close`, `volume`, `count_trades`, `open_milliseconds`) VALUES ";
 			time_open_norm = convertSecondsToHMmSs(time_open);
 			time_close_norm = convertSecondsToHMmSs(time_close);
 			time_open_int = (int) (time_open / 1000);
