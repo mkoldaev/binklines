@@ -42,11 +42,10 @@ public class Binklines {
 	protected static String url_api = "https://api.binance.com/api/v1/klines?symbol=";
 	protected static String url_info = "https://api.binance.com/api/v1/exchangeInfo";
 	protected static String quote = "USD";
-	protected static String interval = "1d";
+	protected static String interval = "4h"; //5m 15m 1h 4h 1d 1w 1M
 	protected static String limit = "500"; // лимит по кол-ву свечей
 	protected static String insmysql, insmysql_paras, time_open_norm, time_close_norm;
-	protected static String para, price_open, max_price, low_price, price_close, volume, quote_asset_volume,
-			count_trades, print_final;
+	protected static String para, price_open, max_price, low_price, price_close, volume, quote_asset_volume, count_trades, print_final;
 	protected static long time_open, time_close;
 	protected static int time_open_int;
 	static Statement st, st_paras;
@@ -79,11 +78,6 @@ public class Binklines {
 				"jdbc:mysql://localhost/klines?useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC", connInfo);
 		// ниже метод обновления списка существующих пар
 		//getparas(); System.exit(0); //этот метод запускается только раз в сутки после truncate таблицы paras
-
-		//interval = "1d";
-		//interval = "1h";
-		//interval = "1w";
-		interval = "1M";
 		
 		// ниже основной метод сбора статистики
 		getparasfrommysql();
@@ -134,24 +128,28 @@ public class Binklines {
 		DateFormat df_week = new SimpleDateFormat("w");
 		DateFormat df_day = new SimpleDateFormat("d");
 		DateFormat df_hour = new SimpleDateFormat("H");
+		DateFormat df_minute = new SimpleDateFormat("m");
 		
 		int int_year = Integer.parseInt(df_year.format(currentDate));
 		int int_month = Integer.parseInt(df_month.format(currentDate));
 		int int_week = Integer.parseInt(df_week.format(currentDate));
 		int int_day = Integer.parseInt(df_day.format(currentDate));
 		int int_hour = Integer.parseInt(df_hour.format(currentDate));
+		int int_minute = Integer.parseInt(df_minute.format(currentDate));
 		
 		int base_year = Integer.parseInt(df_year.format(basemillis));
 		int base_month = Integer.parseInt(df_month.format(basemillis));
 		int base_week = Integer.parseInt(df_week.format(basemillis));
 		int base_day = Integer.parseInt(df_day.format(basemillis));
 		int base_hour = Integer.parseInt(df_hour.format(basemillis));
+		int base_minute = Integer.parseInt(df_minute.format(basemillis));
 		
 		out.println("текущий год: "+int_year);
 		out.println("текущий месяц: "+int_month);
 		out.println("текущая неделя: "+int_week);
 		out.println("текущий день: "+int_day);
 		out.println("текущий час: "+int_hour);
+		out.println("текущая минута: "+int_minute);
 		
 		out.println("");
 		
@@ -160,6 +158,7 @@ public class Binklines {
 		out.println("крайняя неделя в базе: "+base_week);
 		out.println("крайний день в базе: "+base_day);
 		out.println("крайний час в базе: "+base_hour);
+		out.println("крайняя минута в базе: "+base_minute);
 		
 		out.println("");
 		
@@ -173,8 +172,17 @@ public class Binklines {
 			case "1d":
 				if((int_year == base_year) & (int_day == base_day)) { out.println("день совпадает, бин не получаем"); } else { out.println("день НЕ совпадает, смотрим бин"); needbin = true; }
 			break;
+			case "4h":
+				if((int_year == base_year) & (int_hour == base_hour)) { out.println("час совпадает, бин не получаем"); } else { out.println("час НЕ совпадает, смотрим бин"); needbin = true; }
+			break;
 			case "1h":
 				if((int_year == base_year) & (int_hour == base_hour)) { out.println("час совпадает, бин не получаем"); } else { out.println("час НЕ совпадает, смотрим бин"); needbin = true; }
+			break;
+			case "15m":
+				if((int_year == base_year) & (int_minute == base_minute)) { out.println("минута совпадает, бин не получаем"); } else { out.println("минута НЕ совпадает, смотрим бин"); needbin = true; }
+			break;
+			case "5m":
+				if((int_year == base_year) & (int_minute == base_minute)) { out.println("минута совпадает, бин не получаем"); } else { out.println("минута НЕ совпадает, смотрим бин"); needbin = true; }
 			break;
 		}
 
@@ -214,7 +222,7 @@ public class Binklines {
 						base_lasttime = Long.parseLong(paralastresult.getString("open_milliseconds"));
 						// здесь вычисляется последняя миллисекунда в статистике из базы и специально
 						// инкрементируется, чтобы повторно не вставлять уже имеющиеся данные
-						lasttime += 0000000000001L;
+						lasttime = base_lasttime += 0000000000001L;
 						//out.println(lasttime);
 					}
 				}
@@ -237,6 +245,7 @@ public class Binklines {
 	}
 
 	//startTime 1580515200001 соответствует 1 февраля 2020 года. Для unixtime нужно убавлять 3 посл.символа, т.е. 1580515200
+    //данные приходят начиная с самой древней даты, поэтому нужно при вставке проверять на уникальность ?? на самом деле нет
 	private static void checkklines(String para, Long starttime)
 			throws UnirestException, NullPointerException, InterruptedException {
 		

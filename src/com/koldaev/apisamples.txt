@@ -1,7 +1,9 @@
 
 
-https://api.binance.com/api/v1/klines?symbol=RLCUSDT&interval=1d&limit=400&startTime=1573862400000
-https://api.binance.com/api/v1/klines?symbol=RLCUSDT&interval=1d&limit=400&startTime=1573862400001
-
-https://api.binance.com/api/v1/klines?symbol=RLCUSDT&interval=1d&limit=400&endTime=1573862400000
-https://api.binance.com/api/v1/klines?symbol=RLCUSDT&interval=1d&limit=400&endTime=1573862399999
+https://api.binance.com/api/v1/klines?symbol=BTCUSDT&interval=1M&limit=400&startTime=1580515200001
+https://api.binance.com/api/v1/klines?symbol=BTCUSDT&interval=1w&limit=400&startTime=1580515200001
+https://api.binance.com/api/v1/klines?symbol=BTCUSDT&interval=1d&limit=400&startTime=1580515200001
+https://api.binance.com/api/v1/klines?symbol=BTCUSDT&interval=4h&limit=400&startTime=1580515200001
+https://api.binance.com/api/v1/klines?symbol=BTCUSDT&interval=1h&limit=400&startTime=1580515200001
+https://api.binance.com/api/v1/klines?symbol=BTCUSDT&interval=15m&limit=400&startTime=1580515200001
+https://api.binance.com/api/v1/klines?symbol=BTCUSDT&interval=5m&limit=400&startTime=1580515200001
