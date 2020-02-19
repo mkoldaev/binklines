@@ -75,7 +75,7 @@ public class Fundament {
 	
 	protected static void setconns() throws SQLException {
 		conn = DriverManager.getConnection("jdbc:mysql://localhost/klines?useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC", connInfo);
-		out.println("first start");
+		//out.println("first start");
 		// информацию по доступным парам получаем только раз в сутки
 		conn_paras = DriverManager.getConnection("jdbc:mysql://localhost/klines?useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC", connInfo);
 		conn_last = DriverManager.getConnection("jdbc:mysql://localhost/klines?useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC", connInfo);
@@ -94,7 +94,7 @@ public class Fundament {
 		int base_month = Integer.parseInt(df_month.format(basemillis));
 		int base_week = Integer.parseInt(df_week.format(basemillis));
 		
-		out.println("текущие мили: "+currentmiisecunds);
+		//out.println("текущие мили: "+currentmiisecunds);
 		
 		//здесь в минутах и 4h свечах должно быть интервальное округление для сравнения, учитывая год и еще час - в 15 или 5 минут
 		switch (interval) {
@@ -106,33 +106,33 @@ public class Fundament {
 			break;
 			case "1d":
 				lastmilisbase += plus_1d;
-				out.println("крайние доступные мили в базе: " + lastmilisbase);
+				//out.println("крайние доступные мили в базе: " + lastmilisbase);
 				if(currentmiisecunds <= lastmilisbase) { out.println("день совпадает, бин не получаем"); } else { out.println("день НЕ совпадает, смотрим бин"); needbin = true; }
 			break;
 			case "1h":
-				out.println("мили часа в базе: " + lastmilisbase);
+				//out.println("мили часа в базе: " + lastmilisbase);
 				lastmilisbase += plus_1h;
-				out.println("крайние доступные мили часа в базе: " + lastmilisbase);
+				//out.println("крайние доступные мили часа в базе: " + lastmilisbase);
 				if(currentmiisecunds <= lastmilisbase) { out.println("час совпадает, бин не получаем"); } else { out.println("час НЕ совпадает, смотрим бин"); needbin = true; }
 			break;
 			case "4h":
 				lastmilisbase += plus_4h;
-				out.println("крайние доступные мили в базе: " + lastmilisbase);
+				//out.println("крайние доступные мили в базе: " + lastmilisbase);
 				if(currentmiisecunds <= lastmilisbase) { out.println("4-й час совпадает, бин не получаем"); } else { out.println("4-й час НЕ совпадает, смотрим бин"); needbin = true; }
 			break;
 			case "15m":
 				lastmilisbase += plus_15m;
-				out.println("крайние доступные мили в базе: " + lastmilisbase);
+				//out.println("крайние доступные мили в базе: " + lastmilisbase);
 				if(currentmiisecunds <= lastmilisbase) { out.println("15-я минута совпадает, бин не получаем"); } else { out.println("15-я минута НЕ совпадает, смотрим бин"); needbin = true; }
 			break;
 			case "5m":
 				lastmilisbase += plus_5m;
-				out.println("крайние доступные мили в базе: " + lastmilisbase);
+				//out.println("крайние доступные мили в базе: " + lastmilisbase);
 				if(currentmiisecunds <= lastmilisbase) { out.println("5-я минута совпадает, бин не получаем"); } else { out.println("5-я минута НЕ совпадает, смотрим бин"); needbin = true; }
 			break;
 			case "1min":
 				lastmilisbase += plus_1m;
-				out.println("крайние доступные мили в базе: " + lastmilisbase);
+				//out.println("крайние доступные мили в базе: " + lastmilisbase);
 				if(currentmiisecunds <= lastmilisbase) { out.println("минута совпадает, бин не получаем"); } else { out.println("минута НЕ совпадает, смотрим бин"); needbin = true; }
 			break;
 		}
@@ -140,7 +140,7 @@ public class Fundament {
 		// проверяем здесь https://www.unixtimestamp.com
 		// на примере 1580515200000 - 01.02.2020
 		// текущее значение 1582014462597
-		out.println("");
+		//out.println("");
 		return needbin;
 		
 	}
@@ -152,7 +152,7 @@ public class Fundament {
 		
 		String sqlmysql = "SELECT para FROM paras where status = \"TRADING\"";
 		if(!apipara.equals("emptystringpara")) sqlmysql += " and para = \"" + apipara + "\"";
-		out.println(sqlmysql);
+		//out.println(sqlmysql);
 		
 		paranames = conn_paras.prepareStatement(sqlmysql);
 		if (paranames.execute()) {
@@ -161,14 +161,14 @@ public class Fundament {
 				Long lasttime = 0L;
 				Long base_lasttime = 0L;
 				para = paranamesresult.getString("para");
-				out.println("");
+				//out.println("");
 				out.println("тянем пару " + para);
 
 				//здесь нужно обязательно учитывать статус TRADING, иначе будут инсертиться дубликаты, п.ч. последняя статистика ушедшей пары не будет совпадать с текущим временем
 				String mysqllast = "SELECT * FROM klines.kline_" + interval.toLowerCase() + " where para = \"" + para
 						+ "\" order by open_milliseconds desc LIMIT 1";
 				
-				out.println(mysqllast);
+				//out.println(mysqllast);
 				paralast = conn_last.prepareStatement(mysqllast);
 				if (paralast.execute()) {
 					paralastresult = paralast.getResultSet();
@@ -206,11 +206,11 @@ public class Fundament {
     protected static void checkklines(String para, Long starttime) throws UnirestException, NullPointerException, InterruptedException, JSONException {
 		
 		TimeUnit.MILLISECONDS.sleep(500); // здесь задержка в полсекунды; наверно, чтобы по api не заблочили
-		out.println("Вызываем пару "+para+ " с милями "+starttime+ " и интервалом "+interval);
+		//out.println("Вызываем пару "+para+ " с милями "+starttime+ " и интервалом "+interval);
 
 		intervaltoapi = interval;
 		if (interval.equals("1min")) {
-			out.println("Задан минимальный интервал");
+			//out.println("Задан минимальный интервал");
 			intervaltoapi = "1m";
 		}
 
@@ -220,9 +220,9 @@ public class Fundament {
 		HttpResponse<JsonNode> request = Unirest.get(url_api).asJson();
 		JSONArray results = request.getBody().getArray();
 
-		out.println(url_api);
+		//out.println(url_api);
 		// TimeUnit.SECONDS.sleep(1);
-		out.println(results);
+		//out.println(results);
 
 		results.forEach(items -> {
 			JSONArray item = (JSONArray) items;
@@ -258,12 +258,12 @@ public class Fundament {
 			// print_final += ", квота ордера: "+quote_asset_volume;
 			print_final += ", сделки: " + count_trades;
 
-			out.println(print_final);
+			//out.println(print_final);
 
 			insmysql += "(\"" + para + "\",\"" + time_open_norm + "\",\"" + time_close_norm + "\",\"" + price_open
 					+ "\",\"" + max_price + "\",\"" + low_price + "\",\"" + price_close + "\",\"" + volume + "\",\""
 					+ item.get(7).toString() + "\"," + time_open + ");";
-			out.println(insmysql);
+			//out.println(insmysql);
 			try {
 				st.execute(insmysql);
 			} catch (SQLException e) {
@@ -272,7 +272,7 @@ public class Fundament {
 			} catch (NullPointerException n) {
 				out.println(n.getMessage());
 			}
-			out.println("");
+			//out.println("");
 
 		});
 	}
