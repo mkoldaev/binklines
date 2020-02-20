@@ -1,0 +1,4 @@
+*/3 *   * * *   root    /scripts/binstat.sh 5m
+*/7 *   * * *   root    /scripts/binstat.sh 15m
+*/29 *  * * *   root    /scripts/binstat.sh 1h
+*  */2  * * *   root    /scripts/binstat.sh 4h
