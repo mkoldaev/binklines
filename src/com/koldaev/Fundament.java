@@ -74,11 +74,11 @@ public class Fundament {
 	protected final static DateFormat df_week = new SimpleDateFormat("w");
 	
 	protected static void setconns() throws SQLException {
-		conn = DriverManager.getConnection("jdbc:mysql://localhost/klines?useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC", connInfo);
+		conn = DriverManager.getConnection("jdbc:mysql://localhost/klines?allowPublicKeyRetrieval=true&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC", connInfo);
 		//out.println("first start");
 		// информацию по доступным парам получаем только раз в сутки
-		conn_paras = DriverManager.getConnection("jdbc:mysql://localhost/klines?useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC", connInfo);
-		conn_last = DriverManager.getConnection("jdbc:mysql://localhost/klines?useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC", connInfo);
+		conn_paras = DriverManager.getConnection("jdbc:mysql://localhost/klines?allowPublicKeyRetrieval=true&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC", connInfo);
+		conn_last = DriverManager.getConnection("jdbc:mysql://localhost/klines?allowPublicKeyRetrieval=true&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC", connInfo);
 	}
 	
 	protected static boolean getcurrenttime(long basemillis) {
