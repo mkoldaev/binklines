@@ -1,4 +1,6 @@
+15 1,14 * * *   root    /scripts/binstat.sh 155m EOSUSDT PARASUPDATE
 */3 *   * * *   root    /scripts/binstat.sh 5m
 */7 *   * * *   root    /scripts/binstat.sh 15m
-*/29 *  * * *   root    /scripts/binstat.sh 1h
-*  */2  * * *   root    /scripts/binstat.sh 4h
+*/30 *  * * *   root    /scripts/binstat.sh 1h
+1 */2   * * *   root    /scripts/binstat.sh 4h
+15 1    * * mon root    /scripts/binstat.sh 1w
