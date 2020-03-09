@@ -10,3 +10,4 @@ CREATE TABLE `paras` (
   `maxprice` varchar(20) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=0;
+ 
