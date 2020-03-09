@@ -4,5 +4,9 @@ CREATE TABLE `paras` (
   `status` varchar(55) DEFAULT NULL,
   `quoteAsset` varchar(20) DEFAULT NULL,
   `baseAsset` varchar(20) DEFAULT NULL,
+  `ticksize` varchar(20) DEFAULT NULL,
+  `stepsize` varchar(20) DEFAULT NULL,
+  `minprice` varchar(20) DEFAULT NULL,
+  `maxprice` varchar(20) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=247 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=0;

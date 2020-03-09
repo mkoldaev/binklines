@@ -55,7 +55,7 @@ public class Fundament {
 	protected final static long plus_15m = Long.parseLong("0000000900000");
 	protected final static long plus_5m  = Long.parseLong("0000000300000");
 	protected final static long plus_1m  = Long.parseLong("0000000060000");
-	protected static String intervaltobase, intervaltoapi;
+	protected static String intervaltobase, intervaltoapi, ticksize, stepsize, maxprice, minprice;
 	protected static String apipara = "emptystringpara";
 
 	static PreparedStatement paranames, paralast = null;
@@ -297,9 +297,17 @@ public class Fundament {
 			String quoteAsset = obj.getString("quoteAsset").intern();
 			String baseAsset = obj.getString("baseAsset").intern();
 			if (status == "TRADING" && (quoteAsset == "USDT" || quoteAsset == "BTC" || quoteAsset == "RUB")) {
+				JSONArray filtersa = obj.getJSONArray("filters");
+			    ticksize = filtersa.getJSONObject(0).getString("tickSize");
+			    stepsize = filtersa.getJSONObject(2).getString("stepSize");
+			    minprice = filtersa.getJSONObject(0).getString("minPrice");
+			    maxprice = filtersa.getJSONObject(0).getString("maxPrice");
+			    out.println(para+": ticksize: "+ticksize+"; stepsize: "+stepsize+"; minprice: "+minprice+"; maxprice: "+maxprice);
 				showparas.add(para); // получаем только пары живые с торгами
-				insmysql_paras = "INSERT INTO `paras` (`para`, `status`, `quoteAsset`, `baseAsset`) VALUES ";
-				insmysql_paras += "(\"" + para + "\",\"" + status + "\",\"" + quoteAsset + "\",\"" + baseAsset + "\");";
+				insmysql_paras = "INSERT INTO `paras` (`para`, `status`, `quoteAsset`, `baseAsset`, `ticksize`, `stepsize`, `minprice`, `maxprice`) VALUES ";
+				insmysql_paras += "(\"" + para + "\",\"" + status + "\",\"" + quoteAsset + "\",\"" + baseAsset + 
+						"\",\"" + ticksize + "\",\"" + stepsize + "\",\"" + minprice + "\",\"" + maxprice +
+						"\");";
 				try {
 					st_paras.execute(insmysql_paras);
 				} catch (SQLException e) {
