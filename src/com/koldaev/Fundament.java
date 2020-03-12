@@ -30,6 +30,9 @@ import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import static java.lang.System.out;
 
+import redis.clients.jedis.Jedis;
+import redis.clients.jedis.exceptions.JedisException;
+
 public class Fundament {
 	
 	protected static long timeInSec1;
@@ -73,12 +76,13 @@ public class Fundament {
 	protected final static DateFormat df_month = new SimpleDateFormat("M");
 	protected final static DateFormat df_week = new SimpleDateFormat("w");
 	
+	protected static Jedis jedis;
+	
 	protected static void setconns() throws SQLException {
 		conn = DriverManager.getConnection("jdbc:mysql://localhost/klines?allowPublicKeyRetrieval=true&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC", connInfo);
-		//out.println("first start");
-		// информацию по доступным парам получаем только раз в сутки
 		conn_paras = DriverManager.getConnection("jdbc:mysql://localhost/klines?allowPublicKeyRetrieval=true&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC", connInfo);
 		conn_last = DriverManager.getConnection("jdbc:mysql://localhost/klines?allowPublicKeyRetrieval=true&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC", connInfo);
+		jedis = JedisFactory.getInstance().getJedisPool().getResource();
 	}
 	
 	protected static boolean getcurrenttime(long basemillis) {
@@ -278,7 +282,7 @@ public class Fundament {
 	}
 
 
-	protected static void getparas() throws JSONException, IOException, SQLException, NullPointerException {
+	protected static void getparas() throws JSONException, IOException, SQLException, NullPointerException, JedisException {
 		try {
 			st_paras = conn.createStatement();
 			st_paras.executeUpdate("TRUNCATE paras");
@@ -310,11 +314,17 @@ public class Fundament {
 						"\");";
 				try {
 					st_paras.execute(insmysql_paras);
+		    		jedis.set(para+"_TICKSIZE",ticksize);
+		    		jedis.set(para+"_STEPSIZE",stepsize);
+		    		jedis.set(para+"_MINPRICE",minprice);
+		    		jedis.set(para+"_MAXPRICE",maxprice);
 				} catch (SQLException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				} catch (NullPointerException n) {
 					out.println(n.getMessage());
+				} catch (JedisException en) {
+					out.println(en.getMessage());
 				}
 			}
 		});

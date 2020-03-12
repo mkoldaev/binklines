@@ -20,5 +20,10 @@
 	<classpathentry kind="lib" path="javalibs/commons-logging-1.2.jar"/>
 	<classpathentry kind="lib" path="javalibs/mysql-connector-java-8.0.11.jar"/>
 	<classpathentry kind="lib" path="javalibs/commons-collections4-4.1.jar"/>
+	<classpathentry kind="lib" path="javalibs/jedis-3.0.1.jar"/>
+	<classpathentry kind="lib" path="javalibs/commons-lang3-3.7.jar"/>
+	<classpathentry kind="lib" path="javalibs/commons-pool2-2.0.jar"/>
+	<classpathentry kind="lib" path="javalibs/slf4j-api-1.8.0-beta4.jar"/>
+	<classpathentry kind="lib" path="javalibs/slf4j-simple-1.8.0-beta4.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
