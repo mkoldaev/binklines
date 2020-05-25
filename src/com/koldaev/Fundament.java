@@ -43,12 +43,12 @@ public class Fundament {
 	protected static String interval = "1h"; //1min 5m 15m 1h 4h 1d 1w 1M
 	
 	protected static String limit = "500"; // лимит по кол-ву свечей
-	protected static String insmysql, insmysql_paras, time_open_norm, time_close_norm;
+	protected static String insmysql, insmysql_paras, time_open_norm, time_close_norm, update_avg;
 	protected static String para, price_open, max_price, low_price, price_close, volume, quote_asset_volume, count_trades, print_final;
 	protected static long time_open, time_close;
-	protected static int time_open_int;
-	static Statement st, st_paras;
-	protected static BufferedReader rd;
+	protected static int time_open_int, time_close_int;
+	static Statement st, st_paras, st_avg;
+	protected static BufferedReader rd; 
 	protected static ArrayList<String> showparas = new ArrayList<String>();
 
 	protected final static long min_milis =Long.parseLong("0000000000001");
@@ -242,15 +242,17 @@ public class Fundament {
 
 			try {
 				st = conn.createStatement();
+				st_avg = conn.createStatement();
 			} catch (SQLException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
 			intervaltobase = interval.toLowerCase();
-			insmysql = "INSERT INTO `kline_" + intervaltobase + "` (`para`, `time_open`, `time_close`, `price_open`, `max_price`, `low_price`, `price_close`, `volume`, `count_trades`, `open_milliseconds`) VALUES ";
+			insmysql = "INSERT INTO `kline_" + intervaltobase + "` (`para`, `time_open`, `time_close`, `price_open`, `max_price`, `low_price`, `price_close`, `volume`, `count_trades`, `open_milliseconds`, `close_milliseconds`) VALUES ";
 			time_open_norm = convertSecondsToHMmSs(time_open);
 			time_close_norm = convertSecondsToHMmSs(time_close);
 			time_open_int = (int) (time_open / 1000);
+			time_close_int = (int) (time_close / 1000);
 
 			print_final = "Открытие в " + time_open_norm;
 			print_final += ", откр цена: " + price_open;
@@ -266,10 +268,12 @@ public class Fundament {
 
 			insmysql += "(\"" + para + "\",\"" + time_open_norm + "\",\"" + time_close_norm + "\",\"" + price_open
 					+ "\",\"" + max_price + "\",\"" + low_price + "\",\"" + price_close + "\",\"" + volume + "\",\""
-					+ item.get(7).toString() + "\"," + time_open + ");";
+					+ item.get(7).toString() + "\"," + time_open + "," + time_close + ");";
 			//out.println(insmysql);
+			update_avg = "update kline_"+intervaltobase+" set price_avg = avg_two_crypto(low_price,max_price) where price_avg is NULL";
 			try {
 				st.execute(insmysql);
+				st_avg.execute(update_avg);
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				out.println(e.getMessage());
