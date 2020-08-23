@@ -28,6 +28,8 @@ import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
+
+import static java.lang.System.exit;
 import static java.lang.System.out;
 
 import redis.clients.jedis.Jedis;
@@ -72,18 +74,20 @@ public class Fundament {
 		connInfo.put("password", "vnfhry46");
 	}
 	
-	protected final static DateFormat df_year = new SimpleDateFormat("yyyy");
+	protected final static DateFormat df_year = new SimpleDateFormat("y");
 	protected final static DateFormat df_month = new SimpleDateFormat("M");
 	protected final static DateFormat df_week = new SimpleDateFormat("W");
-	protected final static DateFormat df_day = new SimpleDateFormat("dd");
-	protected final static DateFormat df_hour = new SimpleDateFormat("HH");
+	protected final static DateFormat df_day = new SimpleDateFormat("d");
+	protected final static DateFormat df_hour = new SimpleDateFormat("H");
 	
 	protected static Jedis jedis;
 	
 	protected static void setconns() throws SQLException {
-		conn = DriverManager.getConnection("jdbc:mysql://localhost/klines?allowPublicKeyRetrieval=true&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC", connInfo);
-		conn_paras = DriverManager.getConnection("jdbc:mysql://localhost/klines?allowPublicKeyRetrieval=true&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC", connInfo);
-		conn_last = DriverManager.getConnection("jdbc:mysql://localhost/klines?allowPublicKeyRetrieval=true&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC", connInfo);
+		String host = "localhost";
+		host = "dockerhub.ru:3311"; //для локального запуска - нужно будет комментировать
+		conn = DriverManager.getConnection("jdbc:mysql://"+host+"/klines?allowPublicKeyRetrieval=true&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC", connInfo);
+		conn_paras = DriverManager.getConnection("jdbc:mysql://"+host+"/klines?allowPublicKeyRetrieval=true&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC", connInfo);
+		conn_last = DriverManager.getConnection("jdbc:mysql://"+host+"/klines?allowPublicKeyRetrieval=true&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC", connInfo);
 		jedis = JedisFactory.getInstance().getJedisPool().getResource();
 	}
 	
@@ -102,6 +106,9 @@ public class Fundament {
 		int base_week = Integer.parseInt(df_week.format(basemillis));
 		int base_day = Integer.parseInt(df_day.format(basemillis));
 		int base_hour = Integer.parseInt(df_hour.format(basemillis));
+
+		out.println("текущая дата: "+int_year+"."+int_month+"."+int_day+" "+int_hour);
+		out.println("бинансовая дата: "+base_year+"."+base_month+"."+base_day+" "+base_hour);
 
 		switch (interval) {
 			case "1M":
@@ -164,7 +171,8 @@ public class Fundament {
 				if (paralast.execute()) {
 					paralastresult = paralast.getResultSet();
 					while (paralastresult.next()) {
-						base_lasttime = Long.parseLong(paralastresult.getString("open_milliseconds"));
+						//здесь нужно сверять по закрытию свечи в базе, а не по открытию!
+						base_lasttime = Long.parseLong(paralastresult.getString("close_milliseconds"));
 						// здесь вычисляется последняя миллисекунда в статистике из базы и специально
 						// инкрементируется, чтобы повторно не вставлять уже имеющиеся данные
 						lasttime = base_lasttime += min_milis;
@@ -175,7 +183,7 @@ public class Fundament {
 				// здесь нужно проверять текущее время по интервалу и если оно не вышло, то не
 				// посылаем лишний запрос на бин
 				// сначала достаем текущее время
-				if(getcurrenttime(base_lasttime)) checkklines(para,lasttime);
+				if(getcurrenttime(base_lasttime) == true) checkklines(para,lasttime);
 
 				// пока только имитируем запрос к бину
 				//if(getcurrenttime(base_lasttime)) testcheckklines(para,lasttime);
