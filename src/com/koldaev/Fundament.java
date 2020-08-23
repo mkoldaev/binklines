@@ -339,6 +339,7 @@ public class Fundament {
 			}
 		});
 		out.println("Кол-во живых пар с USDT и BTC: " + showparas.size());
+		date = new Date();
 		formatted = formatter.format(date);
 		out.println("завершение сбора пар по UTC: "+formatted+"\n");
 	}
