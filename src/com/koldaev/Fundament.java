@@ -287,6 +287,11 @@ public class Fundament {
 
 
 	protected static void getparas() throws JSONException, IOException, SQLException, NullPointerException, JedisException {
+		Date date = new Date();
+		SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.YYYY HH:mm:ss");
+		formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
+		String formatted = formatter.format(date);
+		out.println("\nначало сбора пар по UTC: "+formatted);
 		try {
 			st_paras = conn.createStatement();
 			st_paras.executeUpdate("TRUNCATE paras");
@@ -298,19 +303,20 @@ public class Fundament {
 		}
 		JSONObject json = readJsonFromUrl(url_info);
 		JSONArray res = json.getJSONArray("symbols");
+		//здесь нужно выводить в лог кол-во пар и время сбора!
 		res.forEach(item -> {
 			JSONObject obj = (JSONObject) item;
 			String para = obj.getString("symbol").intern();
 			String status = obj.getString("status").intern();
 			String quoteAsset = obj.getString("quoteAsset").intern();
 			String baseAsset = obj.getString("baseAsset").intern();
-			if (status == "TRADING" && (quoteAsset == "USDT" || quoteAsset == "BTC" || quoteAsset == "RUB")) {
+			if (status == "TRADING" && (quoteAsset == "USDT" || quoteAsset == "BTC")) {
 				JSONArray filtersa = obj.getJSONArray("filters");
 			    ticksize = filtersa.getJSONObject(0).getString("tickSize");
 			    stepsize = filtersa.getJSONObject(2).getString("stepSize");
 			    minprice = filtersa.getJSONObject(0).getString("minPrice");
 			    maxprice = filtersa.getJSONObject(0).getString("maxPrice");
-			    out.println(para+": ticksize: "+ticksize+"; stepsize: "+stepsize+"; minprice: "+minprice+"; maxprice: "+maxprice);
+			    //out.println(para+": ticksize: "+ticksize+"; stepsize: "+stepsize+"; minprice: "+minprice+"; maxprice: "+maxprice);
 				showparas.add(para); // получаем только пары живые с торгами
 				insmysql_paras = "INSERT INTO `paras` (`para`, `status`, `quoteAsset`, `baseAsset`, `ticksize`, `stepsize`, `minprice`, `maxprice`) VALUES ";
 				insmysql_paras += "(\"" + para + "\",\"" + status + "\",\"" + quoteAsset + "\",\"" + baseAsset + 
@@ -332,7 +338,9 @@ public class Fundament {
 				}
 			}
 		});
-		out.println(showparas);
+		out.println("Кол-во живых пар с USDT и BTC: " + showparas.size());
+		formatted = formatter.format(date);
+		out.println("завершение сбора пар по UTC: "+formatted+"\n");
 	}
 
 	protected static String convertSecondsToHMmSs(long millis) {

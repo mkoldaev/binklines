@@ -4,13 +4,15 @@ import java.io.IOException;
 import java.sql.SQLException;
 import org.json.JSONException;
 import com.mashape.unirest.http.exceptions.UnirestException;
+import redis.clients.jedis.exceptions.JedisException;
+
 import static java.lang.System.out;
 
 //максимум три аргумента в настройках запуска eclipse: 4h eosusdt yes
 //если задан третий с любым словом, то после обработки, происходит выход
 public class Binklines extends Fundament {
 
-	public static void main(String[] args) throws JSONException, IOException, InterruptedException, UnirestException, SQLException, NullPointerException {
+	public static void main(String[] args) throws JSONException, IOException, InterruptedException, UnirestException, SQLException, NullPointerException, JedisException {
 
 		//подготавливаем коннекторы к базе
 		setconns();

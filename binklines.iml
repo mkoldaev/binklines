@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module type="JAVA_MODULE" version="4">
+  <component name="EclipseModuleManager">
+    <libelement value="jar://$MODULE_DIR$/javalibs/json-20180130.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/javalibs/unirest-java-1.4.9.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/javalibs/httpasyncclient-4.1.4.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/javalibs/httpasyncclient-cache-4.1.4.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/javalibs/httpclient-4.5.7.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/javalibs/httpclient-cache-4.5.7.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/javalibs/httpclient-osgi-4.5.7.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/javalibs/httpclient-win-4.5.7.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/javalibs/httpcore-4.4.11.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/javalibs/httpcore-ab-4.4.11.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/javalibs/httpcore-nio-4.4.10.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/javalibs/httpcore-nio-4.4.11.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/javalibs/httpcore-osgi-4.4.11.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/javalibs/httpmime-4.5.7.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/javalibs/commons-codec-1.11.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/javalibs/commons-logging-1.2.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/javalibs/mysql-connector-java-8.0.11.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/javalibs/commons-collections4-4.1.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/javalibs/jedis-3.0.1.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/javalibs/commons-lang3-3.7.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/javalibs/commons-pool2-2.0.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/javalibs/slf4j-api-1.8.0-beta4.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/javalibs/slf4j-simple-1.8.0-beta4.jar!/" />
+    <src_description expected_position="0">
+      <src_folder value="file://$MODULE_DIR$/src" expected_position="0" />
+    </src_description>
+  </component>
+  <component name="NewModuleRootManager">
+    <output url="file://$MODULE_DIR$/bin" />
+    <exclude-output />
+    <content url="file://$MODULE_DIR$">
+      <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$" type="java-resource" />
+    </content>
+    <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="jdk" jdkName="JavaSE-9" jdkType="JavaSDK" />
+    <orderEntry type="module-library">
+      <library name="json-20180130.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/javalibs/json-20180130.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="unirest-java-1.4.9.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/javalibs/unirest-java-1.4.9.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="httpasyncclient-4.1.4.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/javalibs/httpasyncclient-4.1.4.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="httpasyncclient-cache-4.1.4.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/javalibs/httpasyncclient-cache-4.1.4.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="httpclient-4.5.7.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/javalibs/httpclient-4.5.7.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="httpclient-cache-4.5.7.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/javalibs/httpclient-cache-4.5.7.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="httpclient-osgi-4.5.7.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/javalibs/httpclient-osgi-4.5.7.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="httpclient-win-4.5.7.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/javalibs/httpclient-win-4.5.7.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="httpcore-4.4.11.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/javalibs/httpcore-4.4.11.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="httpcore-ab-4.4.11.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/javalibs/httpcore-ab-4.4.11.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="httpcore-nio-4.4.10.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/javalibs/httpcore-nio-4.4.10.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="httpcore-nio-4.4.11.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/javalibs/httpcore-nio-4.4.11.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="httpcore-osgi-4.4.11.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/javalibs/httpcore-osgi-4.4.11.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="httpmime-4.5.7.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/javalibs/httpmime-4.5.7.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="commons-codec-1.11.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/javalibs/commons-codec-1.11.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="commons-logging-1.2.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/javalibs/commons-logging-1.2.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="mysql-connector-java-8.0.11.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/javalibs/mysql-connector-java-8.0.11.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="commons-collections4-4.1.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/javalibs/commons-collections4-4.1.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="jedis-3.0.1.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/javalibs/jedis-3.0.1.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="commons-lang3-3.7.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/javalibs/commons-lang3-3.7.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="commons-pool2-2.0.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/javalibs/commons-pool2-2.0.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="slf4j-api-1.8.0-beta4.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/javalibs/slf4j-api-1.8.0-beta4.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="slf4j-simple-1.8.0-beta4.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/javalibs/slf4j-simple-1.8.0-beta4.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="library" name="commons-codec-1.11" level="project" />
+  </component>
+</module>
