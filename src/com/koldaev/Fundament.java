@@ -103,41 +103,41 @@ public class Fundament {
 		//здесь в минутах и 4h свечах должно быть интервальное округление для сравнения, учитывая год и еще час - в 15 или 5 минут
 		switch (interval) {
 			case "1M":
-				if((int_year == base_year) & (int_month == base_month)) { out.println("месяц совпадает, бин не получаем"); } else { out.println("месяц НЕ совпадает, смотрим бин"); needbin = true; }
+				if((int_year == base_year) & (int_month == base_month)) { } else { needbin = true; }
 			break;
 			case "1w":
-				if((int_year == base_year) & (int_week == base_week)) { out.println("неделя совпадает, бин не получаем"); } else { out.println("неделя НЕ совпадает, смотрим бин"); needbin = true; }
+				if((int_year == base_year) & (int_week == base_week)) { } else { needbin = true; }
 			break;
 			case "1d":
 				lastmilisbase += plus_1d;
 				//out.println("крайние доступные мили в базе: " + lastmilisbase);
-				if(currentmiisecunds <= lastmilisbase) { out.println("день совпадает, бин не получаем"); } else { out.println("день НЕ совпадает, смотрим бин"); needbin = true; }
+				if(currentmiisecunds <= lastmilisbase) { } else { needbin = true; }
 			break;
 			case "1h":
 				//out.println("мили часа в базе: " + lastmilisbase);
 				lastmilisbase += plus_1h;
 				//out.println("крайние доступные мили часа в базе: " + lastmilisbase);
-				if(currentmiisecunds <= lastmilisbase) { out.println("час совпадает, бин не получаем"); } else { out.println("час НЕ совпадает, смотрим бин"); needbin = true; }
+				if(currentmiisecunds <= lastmilisbase) { } else { needbin = true; }
 			break;
 			case "4h":
 				lastmilisbase += plus_4h;
 				//out.println("крайние доступные мили в базе: " + lastmilisbase);
-				if(currentmiisecunds <= lastmilisbase) { out.println("4-й час совпадает, бин не получаем"); } else { out.println("4-й час НЕ совпадает, смотрим бин"); needbin = true; }
+				if(currentmiisecunds <= lastmilisbase) { } else { needbin = true; }
 			break;
 			case "15m":
 				lastmilisbase += plus_15m;
 				//out.println("крайние доступные мили в базе: " + lastmilisbase);
-				if(currentmiisecunds <= lastmilisbase) { out.println("15-я минута совпадает, бин не получаем"); } else { out.println("15-я минута НЕ совпадает, смотрим бин"); needbin = true; }
+				if(currentmiisecunds <= lastmilisbase) { } else { needbin = true; }
 			break;
 			case "5m":
 				lastmilisbase += plus_5m;
 				//out.println("крайние доступные мили в базе: " + lastmilisbase);
-				if(currentmiisecunds <= lastmilisbase) { out.println("5-я минута совпадает, бин не получаем"); } else { out.println("5-я минута НЕ совпадает, смотрим бин"); needbin = true; }
+				if(currentmiisecunds <= lastmilisbase) { } else { needbin = true; }
 			break;
 			case "1min":
 				lastmilisbase += plus_1m;
 				//out.println("крайние доступные мили в базе: " + lastmilisbase);
-				if(currentmiisecunds <= lastmilisbase) { out.println("минута совпадает, бин не получаем"); } else { out.println("минута НЕ совпадает, смотрим бин"); needbin = true; }
+				if(currentmiisecunds <= lastmilisbase) { } else { needbin = true; }
 			break;
 		}
 		
@@ -153,7 +153,13 @@ public class Fundament {
 
 	protected static void getparasfrommysql()
 			throws SQLException, InterruptedException, NullPointerException, UnirestException {
-		
+
+		Date date = new Date();
+		SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.YYYY HH:mm:ss");
+		formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
+		String formatted = formatter.format(date);
+		out.println("\nначало загрузки свечей по UTC: "+formatted);
+
 		String sqlmysql = "SELECT para FROM paras where status = \"TRADING\"";
 		if(!apipara.equals("emptystringpara")) sqlmysql += " and para = \"" + apipara + "\"";
 		//out.println(sqlmysql);
@@ -194,6 +200,9 @@ public class Fundament {
 				//if(getcurrenttime(base_lasttime)) testcheckklines(para,lasttime);
 			}
 		}
+		date = new Date();
+		formatted = formatter.format(date);
+		out.println("завершение загрузки свечей по UTC: "+formatted+"\n");
 	}
 	
 
@@ -208,7 +217,7 @@ public class Fundament {
 	//startTime 1580515200001 соответствует 1 февраля 2020 года. Для unixtime нужно убавлять 3 посл.символа, т.е. 1580515200
     //данные приходят начиная с самой древней даты, поэтому нужно при вставке проверять на уникальность ?? на самом деле нет
     protected static void checkklines(String para, Long starttime) throws UnirestException, NullPointerException, InterruptedException, JSONException {
-		
+
 		TimeUnit.MILLISECONDS.sleep(500); // здесь задержка в полсекунды; наверно, чтобы по api не заблочили
 		//out.println("Вызываем пару "+para+ " с милями "+starttime+ " и интервалом "+interval);
 
@@ -280,7 +289,6 @@ public class Fundament {
 			} catch (NullPointerException n) {
 				out.println(n.getMessage());
 			}
-			//out.println("");
 
 		});
 	}
