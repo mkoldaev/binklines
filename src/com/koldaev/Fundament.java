@@ -72,9 +72,11 @@ public class Fundament {
 		connInfo.put("password", "vnfhry46");
 	}
 	
-	protected final static DateFormat df_year = new SimpleDateFormat("YYYY");
+	protected final static DateFormat df_year = new SimpleDateFormat("yyyy");
 	protected final static DateFormat df_month = new SimpleDateFormat("M");
-	protected final static DateFormat df_week = new SimpleDateFormat("w");
+	protected final static DateFormat df_week = new SimpleDateFormat("W");
+	protected final static DateFormat df_day = new SimpleDateFormat("dd");
+	protected final static DateFormat df_hour = new SimpleDateFormat("HH");
 	
 	protected static Jedis jedis;
 	
@@ -88,56 +90,35 @@ public class Fundament {
 	protected static boolean getcurrenttime(long basemillis) {
 
 		long currentmiisecunds = System.currentTimeMillis(); // 13 знаков
-		long lastmilisbase = basemillis -= min_milis;
 		boolean needbin = false;
 		Date currentDate = new Date(currentmiisecunds);
 		int int_year = Integer.parseInt(df_year.format(currentDate));
 		int int_month = Integer.parseInt(df_month.format(currentDate));
 		int int_week = Integer.parseInt(df_week.format(currentDate));
+		int int_day = Integer.parseInt(df_day.format(currentDate));
+		int int_hour = Integer.parseInt(df_hour.format(currentDate));
 		int base_year = Integer.parseInt(df_year.format(basemillis));
 		int base_month = Integer.parseInt(df_month.format(basemillis));
 		int base_week = Integer.parseInt(df_week.format(basemillis));
-		
-		//out.println("текущие мили: "+currentmiisecunds);
-		
-		//здесь в минутах и 4h свечах должно быть интервальное округление для сравнения, учитывая год и еще час - в 15 или 5 минут
+		int base_day = Integer.parseInt(df_day.format(basemillis));
+		int base_hour = Integer.parseInt(df_hour.format(basemillis));
+
 		switch (interval) {
 			case "1M":
+				//если текущий год равен полученному из бинанса и текущий месяц равен бинансовому, ничего не делаем
 				if((int_year == base_year) & (int_month == base_month)) { } else { needbin = true; }
 			break;
 			case "1w":
+				//если текущий год равен полученному из бинанса и текущая неделя равна бинансовой, ничего не делаем
 				if((int_year == base_year) & (int_week == base_week)) { } else { needbin = true; }
 			break;
 			case "1d":
-				lastmilisbase += plus_1d;
-				//out.println("крайние доступные мили в базе: " + lastmilisbase);
-				if(currentmiisecunds <= lastmilisbase) { } else { needbin = true; }
+				//если текущий год, месяц и день равен бинансовому, ничего не делаем
+				if((int_year == base_year) & (int_month == base_month) & (int_day == base_day)) { } else { needbin = true; }
 			break;
 			case "1h":
-				//out.println("мили часа в базе: " + lastmilisbase);
-				lastmilisbase += plus_1h;
-				//out.println("крайние доступные мили часа в базе: " + lastmilisbase);
-				if(currentmiisecunds <= lastmilisbase) { } else { needbin = true; }
-			break;
-			case "4h":
-				lastmilisbase += plus_4h;
-				//out.println("крайние доступные мили в базе: " + lastmilisbase);
-				if(currentmiisecunds <= lastmilisbase) { } else { needbin = true; }
-			break;
-			case "15m":
-				lastmilisbase += plus_15m;
-				//out.println("крайние доступные мили в базе: " + lastmilisbase);
-				if(currentmiisecunds <= lastmilisbase) { } else { needbin = true; }
-			break;
-			case "5m":
-				lastmilisbase += plus_5m;
-				//out.println("крайние доступные мили в базе: " + lastmilisbase);
-				if(currentmiisecunds <= lastmilisbase) { } else { needbin = true; }
-			break;
-			case "1min":
-				lastmilisbase += plus_1m;
-				//out.println("крайние доступные мили в базе: " + lastmilisbase);
-				if(currentmiisecunds <= lastmilisbase) { } else { needbin = true; }
+				//если текущий год, месяц, день и час равен бинансовому, ничего не делаем
+				if((int_year == base_year) & (int_month == base_month) & (int_day == base_day) & (int_hour == base_hour)) { } else { needbin = true; }
 			break;
 		}
 		
@@ -233,10 +214,8 @@ public class Fundament {
 		HttpResponse<JsonNode> request = Unirest.get(url_api).asJson();
 		JSONArray results = request.getBody().getArray();
 
-		//out.println(url_api);
-		// TimeUnit.SECONDS.sleep(1);
-		//out.println(results);
-
+		//здесь нужно делать дополнительную проверку
+		//например, если за день свечи берем, то только за предыдущий день, а не текущий
 		results.forEach(items -> {
 			JSONArray item = (JSONArray) items;
 			time_open = (long) item.get(0);
@@ -278,7 +257,9 @@ public class Fundament {
 			insmysql += "(\"" + para + "\",\"" + time_open_norm + "\",\"" + time_close_norm + "\",\"" + price_open
 					+ "\",\"" + max_price + "\",\"" + low_price + "\",\"" + price_close + "\",\"" + volume + "\",\""
 					+ item.get(7).toString() + "\"," + time_open + "," + time_close + ");";
-			//out.println(insmysql);
+			//здесь добавляем в таблицу среднее значение через добавленную нашу функцию в базе - avg_two_crypto
+			//средняя цена рассчитывается с фитиля - середины между максимальной и минимальной цены за отрезок времени
+			//это нужно для прогноза тренда монеты
 			update_avg = "update kline_"+intervaltobase+" set price_avg = avg_two_crypto(low_price,max_price) where price_avg is NULL";
 			try {
 				st.execute(insmysql);

@@ -1,19 +1,3 @@
-CREATE TABLE `kline_15m` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `para` varchar(45) COLLATE utf8_bin DEFAULT NULL,
-  `time_open` varchar(45) COLLATE utf8_bin DEFAULT NULL,
-  `time_close` varchar(45) COLLATE utf8_bin DEFAULT NULL,
-  `price_open` varchar(45) COLLATE utf8_bin DEFAULT NULL,
-  `max_price` varchar(45) COLLATE utf8_bin DEFAULT NULL,
-  `low_price` varchar(45) COLLATE utf8_bin DEFAULT NULL,
-  `price_close` varchar(45) COLLATE utf8_bin DEFAULT NULL,
-  `volume` varchar(90) COLLATE utf8_bin DEFAULT NULL,
-  `count_trades` varchar(90) COLLATE utf8_bin DEFAULT NULL,
-  `open_milliseconds` bigint(15) NOT NULL,
-  `close_milliseconds` bigint(15) NOT NULL,
-  `price_avg` varchar(45) COLLATE utf8_bin DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 CREATE TABLE `kline_1d` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -66,23 +50,6 @@ CREATE TABLE `kline_1m` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
-CREATE TABLE `kline_1min` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `para` varchar(45) COLLATE utf8_bin DEFAULT NULL,
-  `time_open` varchar(45) COLLATE utf8_bin DEFAULT NULL,
-  `time_close` varchar(45) COLLATE utf8_bin DEFAULT NULL,
-  `price_open` varchar(45) COLLATE utf8_bin DEFAULT NULL,
-  `max_price` varchar(45) COLLATE utf8_bin DEFAULT NULL,
-  `low_price` varchar(45) COLLATE utf8_bin DEFAULT NULL,
-  `price_close` varchar(45) COLLATE utf8_bin DEFAULT NULL,
-  `volume` varchar(90) COLLATE utf8_bin DEFAULT NULL,
-  `count_trades` varchar(90) COLLATE utf8_bin DEFAULT NULL,
-  `open_milliseconds` bigint(15) NOT NULL,
-  `close_milliseconds` bigint(15) NOT NULL,
-  `price_avg` varchar(45) COLLATE utf8_bin DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
-
 CREATE TABLE `kline_1w` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `para` varchar(45) COLLATE utf8_bin DEFAULT NULL,
@@ -95,40 +62,6 @@ CREATE TABLE `kline_1w` (
   `volume` varchar(90) COLLATE utf8_bin DEFAULT NULL,
   `count_trades` varchar(90) COLLATE utf8_bin DEFAULT NULL,
   `open_milliseconds` bigint(15) DEFAULT NULL,
-  `close_milliseconds` bigint(15) NOT NULL,
-  `price_avg` varchar(45) COLLATE utf8_bin DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
-
-CREATE TABLE `kline_4h` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `para` varchar(45) COLLATE utf8_bin DEFAULT NULL,
-  `time_open` varchar(45) COLLATE utf8_bin DEFAULT NULL,
-  `time_close` varchar(45) COLLATE utf8_bin DEFAULT NULL,
-  `price_open` varchar(45) COLLATE utf8_bin DEFAULT NULL,
-  `max_price` varchar(45) COLLATE utf8_bin DEFAULT NULL,
-  `low_price` varchar(45) COLLATE utf8_bin DEFAULT NULL,
-  `price_close` varchar(45) COLLATE utf8_bin DEFAULT NULL,
-  `volume` varchar(90) COLLATE utf8_bin DEFAULT NULL,
-  `count_trades` varchar(90) COLLATE utf8_bin DEFAULT NULL,
-  `open_milliseconds` bigint(15) NOT NULL,
-  `close_milliseconds` bigint(15) NOT NULL,
-  `price_avg` varchar(45) COLLATE utf8_bin DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
-
-CREATE TABLE `kline_5m` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `para` varchar(45) COLLATE utf8_bin DEFAULT NULL,
-  `time_open` varchar(45) COLLATE utf8_bin DEFAULT NULL,
-  `time_close` varchar(45) COLLATE utf8_bin DEFAULT NULL,
-  `price_open` varchar(45) COLLATE utf8_bin DEFAULT NULL,
-  `max_price` varchar(45) COLLATE utf8_bin DEFAULT NULL,
-  `low_price` varchar(45) COLLATE utf8_bin DEFAULT NULL,
-  `price_close` varchar(45) COLLATE utf8_bin DEFAULT NULL,
-  `volume` varchar(90) COLLATE utf8_bin DEFAULT NULL,
-  `count_trades` varchar(90) COLLATE utf8_bin DEFAULT NULL,
-  `open_milliseconds` bigint(15) NOT NULL,
   `close_milliseconds` bigint(15) NOT NULL,
   `price_avg` varchar(45) COLLATE utf8_bin DEFAULT NULL,
   PRIMARY KEY (`id`)
