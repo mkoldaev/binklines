@@ -22,7 +22,7 @@ public class Binklines extends Fundament {
 			out.println("Задан аргумент интервала: "+interval);
 		} else {
 			out.println("Аргумент интервала не задан");
-			out.println("Входим из программы");
+			out.println("Выходим из программы");
 			System.exit(0);
 		}
 		if (args.length > 1) {
@@ -32,7 +32,7 @@ public class Binklines extends Fundament {
 		if (args.length > 2) {
 			out.println("Задан аргумент обновления таблиц с парами");
 			getparas(); //этот метод запускается только раз в сутки после truncate таблицы paras
-			out.println("Входим из программы");
+			out.println("Выходим из программы");
 			System.exit(0);
 		}
 
