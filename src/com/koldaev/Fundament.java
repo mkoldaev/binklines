@@ -84,7 +84,7 @@ public class Fundament {
 	
 	protected static void setconns() throws SQLException {
 		String host = "localhost";
-		host = "dockerhub.ru:3311"; //для локального запуска - нужно будет комментировать
+		//host = "dockerhub.ru:3311"; //для локального запуска - нужно будет комментировать
 		conn = DriverManager.getConnection("jdbc:mysql://"+host+"/klines?allowPublicKeyRetrieval=true&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC", connInfo);
 		conn_paras = DriverManager.getConnection("jdbc:mysql://"+host+"/klines?allowPublicKeyRetrieval=true&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC", connInfo);
 		conn_last = DriverManager.getConnection("jdbc:mysql://"+host+"/klines?allowPublicKeyRetrieval=true&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC", connInfo);
