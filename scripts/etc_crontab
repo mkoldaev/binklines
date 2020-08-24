@@ -1,10 +1,5 @@
-#обычно инфа по новой паре доступна уже за час, два до начала торгов,
-#но на всякий случай обновляем пары в последнюю минуту часа
-59 *     * * *   root    /scripts/binstat.sh 155m EOSUSDT PARASUPDATE
-*/3 *   * * *   root    /scripts/binstat.sh 5m
-*/7 *   * * *   root    /scripts/binstat.sh 15m
-*/30 *  * * *   root    /scripts/binstat.sh 1h
-1 */2   * * *   root    /scripts/binstat.sh 4h
-15 1    * * mon root    /scripts/binstat.sh 1w
-15 1    1 * *   root    /scripts/binstat.sh 1M
-
+10  *   * * *   root    /scripts/binstat.sh 155m EOSUSDT PARASUPDATE
+03  0   * * *   root    /scripts/binstat.sh 1d
+01  *   * * *   root    /scripts/binstat.sh 1h
+20  0   * * 1   root    /scripts/binstat.sh 1w
+35  0   1 * *   root    /scripts/binstat.sh 1M

@@ -73,7 +73,7 @@ public class Fundament {
 
 	protected final static DateFormat df_year = new SimpleDateFormat("y");
 	protected final static DateFormat df_month = new SimpleDateFormat("MM");
-	protected final static DateFormat df_week = new SimpleDateFormat("u");
+	protected final static DateFormat df_week = new SimpleDateFormat("w");
 	protected final static DateFormat df_day = new SimpleDateFormat("d");
 	protected final static DateFormat df_hour = new SimpleDateFormat("H");
 
@@ -155,8 +155,6 @@ public class Fundament {
 				Long base_lasttime = 0L;
 				para = paranamesresult.getString("para");
 				//out.println("");
-				out.println("тянем пару " + para);
-
 				//здесь нужно обязательно учитывать статус TRADING, иначе будут инсертиться дубликаты, п.ч. последняя статистика ушедшей пары не будет совпадать с текущим временем
 				String mysqllast = "SELECT * FROM klines.kline_" + interval.toLowerCase() + " where para = \"" + para
 						+ "\" order by open_milliseconds desc LIMIT 1";
@@ -175,9 +173,7 @@ public class Fundament {
 					}
 				}
 
-				// здесь нужно проверять текущее время по интервалу и если оно не вышло, то не
-				// посылаем лишний запрос на бин
-				// сначала достаем текущее время
+				// первая проверка на время
 				if(getcurrenttime(base_lasttime) == true) checkklines(para,lasttime);
 
 				// пока только имитируем запрос к бину
@@ -213,6 +209,7 @@ public class Fundament {
 
 		url_api = "https://api.binance.com/api/v1/klines?symbol=";
 		url_api += para + "&interval=" + intervaltoapi + "&limit=" + limit;
+		//out.println(url_api);
 		if (starttime > 0) url_api += "&startTime=" + starttime;
 		HttpResponse<JsonNode> request = Unirest.get(url_api).asJson();
 		JSONArray results = request.getBody().getArray();
@@ -230,10 +227,15 @@ public class Fundament {
 			time_close = (long) item.get(6);
 			quote_asset_volume = item.get(7).toString();
 			count_trades = item.get(8).toString();
+			time_open_norm = convertSecondsToHMmSs(time_open);
+			time_close_norm = convertSecondsToHMmSs(time_close);
+			time_open_int = (int) (time_open / 1000);
+			time_close_int = (int) (time_close / 1000);
 
 			//здесь нужно дополнительную проверку делать, не кончился ли к примеру еще день
 			//если совпадение найдено выходим из цикла с помощью оператора return
-			if(getcurrenttime(time_open+min_milis) == false) return;
+			if(getcurrenttime(time_open) == false) return;
+			out.println("тянем пару " + para);
 
 			try {
 				st = conn.createStatement();
@@ -244,10 +246,6 @@ public class Fundament {
 			}
 			intervaltobase = interval.toLowerCase();
 			insmysql = "INSERT INTO `kline_" + intervaltobase + "` (`para`, `time_open`, `time_close`, `price_open`, `max_price`, `low_price`, `price_close`, `volume`, `count_trades`, `open_milliseconds`, `close_milliseconds`) VALUES ";
-			time_open_norm = convertSecondsToHMmSs(time_open);
-			time_close_norm = convertSecondsToHMmSs(time_close);
-			time_open_int = (int) (time_open / 1000);
-			time_close_int = (int) (time_close / 1000);
 
 			print_final = "Открытие в " + time_open_norm;
 			print_final += ", откр цена: " + price_open;
