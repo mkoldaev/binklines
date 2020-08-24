@@ -32,9 +32,6 @@ import com.mashape.unirest.http.exceptions.UnirestException;
 import static java.lang.System.exit;
 import static java.lang.System.out;
 
-import redis.clients.jedis.Jedis;
-import redis.clients.jedis.exceptions.JedisException;
-
 public class Fundament {
 	
 	protected static long timeInSec1;
@@ -73,22 +70,19 @@ public class Fundament {
 		connInfo.put("user", "root");
 		connInfo.put("password", "vnfhry46");
 	}
-	
+
 	protected final static DateFormat df_year = new SimpleDateFormat("y");
-	protected final static DateFormat df_month = new SimpleDateFormat("M");
-	protected final static DateFormat df_week = new SimpleDateFormat("W");
+	protected final static DateFormat df_month = new SimpleDateFormat("MM");
+	protected final static DateFormat df_week = new SimpleDateFormat("u");
 	protected final static DateFormat df_day = new SimpleDateFormat("d");
 	protected final static DateFormat df_hour = new SimpleDateFormat("H");
-	
-	protected static Jedis jedis;
-	
+
 	protected static void setconns() throws SQLException {
 		String host = "localhost";
 		//host = "dockerhub.ru:3311"; //для локального запуска - нужно будет комментировать
 		conn = DriverManager.getConnection("jdbc:mysql://"+host+"/klines?allowPublicKeyRetrieval=true&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC", connInfo);
 		conn_paras = DriverManager.getConnection("jdbc:mysql://"+host+"/klines?allowPublicKeyRetrieval=true&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC", connInfo);
 		conn_last = DriverManager.getConnection("jdbc:mysql://"+host+"/klines?allowPublicKeyRetrieval=true&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC", connInfo);
-		jedis = JedisFactory.getInstance().getJedisPool().getResource();
 	}
 	
 	protected static boolean getcurrenttime(long basemillis) {
@@ -107,32 +101,33 @@ public class Fundament {
 		int base_day = Integer.parseInt(df_day.format(basemillis));
 		int base_hour = Integer.parseInt(df_hour.format(basemillis));
 
-		out.println("текущая дата: "+int_year+"."+int_month+"."+int_day+" "+int_hour);
-		out.println("бинансовая дата: "+base_year+"."+base_month+"."+base_day+" "+base_hour);
+//		out.println(df_week.format(currentDate));
+//		out.println(df_month.format(currentDate));
+//		out.println("текущая дата: "+int_year+"."+int_month+"."+int_week+"."+int_day+" "+int_hour);
+//		out.println("бинансовая дата: "+base_year+"."+base_month+"."+int_week+"."+base_day+" "+base_hour);
 
 		switch (interval) {
 			case "1M":
 				//если текущий год равен полученному из бинанса и текущий месяц равен бинансовому, ничего не делаем
-				if((int_year == base_year) & (int_month == base_month)) { } else { needbin = true; }
+				if((int_year == base_year) & (int_month == base_month)) {} else { needbin = true; }
 			break;
 			case "1w":
 				//если текущий год равен полученному из бинанса и текущая неделя равна бинансовой, ничего не делаем
-				if((int_year == base_year) & (int_week == base_week)) { } else { needbin = true; }
+				if((int_year == base_year) & (int_week == base_week)) {} else { needbin = true; }
 			break;
 			case "1d":
 				//если текущий год, месяц и день равен бинансовому, ничего не делаем
-				if((int_year == base_year) & (int_month == base_month) & (int_day == base_day)) { } else { needbin = true; }
+				if((int_year == base_year) & (int_month == base_month) & (int_day == base_day)) {} else { needbin = true; }
 			break;
 			case "1h":
 				//если текущий год, месяц, день и час равен бинансовому, ничего не делаем
 				if((int_year == base_year) & (int_month == base_month) & (int_day == base_day) & (int_hour == base_hour)) { } else { needbin = true; }
 			break;
 		}
-		
+
 		// проверяем здесь https://www.unixtimestamp.com
 		// на примере 1580515200000 - 01.02.2020
 		// текущее значение 1582014462597
-		//out.println("");
 		return needbin;
 		
 	}
@@ -236,6 +231,10 @@ public class Fundament {
 			quote_asset_volume = item.get(7).toString();
 			count_trades = item.get(8).toString();
 
+			//здесь нужно дополнительную проверку делать, не кончился ли к примеру еще день
+			//если совпадение найдено выходим из цикла с помощью оператора return
+			if(getcurrenttime(time_open+min_milis) == false) return;
+
 			try {
 				st = conn.createStatement();
 				st_avg = conn.createStatement();
@@ -283,7 +282,7 @@ public class Fundament {
 	}
 
 
-	protected static void getparas() throws JSONException, IOException, SQLException, NullPointerException, JedisException {
+	protected static void getparas() throws JSONException, IOException, SQLException, NullPointerException {
 		Date date = new Date();
 		SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.YYYY HH:mm:ss");
 		formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
@@ -321,17 +320,11 @@ public class Fundament {
 						"\");";
 				try {
 					st_paras.execute(insmysql_paras);
-		    		jedis.set(para+"_TICKSIZE",ticksize);
-		    		jedis.set(para+"_STEPSIZE",stepsize);
-		    		jedis.set(para+"_MINPRICE",minprice);
-		    		jedis.set(para+"_MAXPRICE",maxprice);
 				} catch (SQLException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				} catch (NullPointerException n) {
 					out.println(n.getMessage());
-				} catch (JedisException en) {
-					out.println(en.getMessage());
 				}
 			}
 		});
