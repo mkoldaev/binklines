@@ -42,11 +42,11 @@ public class Fundament {
 	protected static String interval = "1h"; //1min 5m 15m 1h 4h 1d 1w 1M
 	
 	protected static String limit = "500"; // лимит по кол-ву свечей
-	protected static String insmysql, insmysql_paras, time_open_norm, time_close_norm, update_avg;
+	protected static String insmysql, insmysql_paras, time_open_norm, time_close_norm, update_avg, update_firstday;
 	protected static String para, price_open, max_price, low_price, price_close, volume, quote_asset_volume, count_trades, print_final;
 	protected static long time_open, time_close;
 	protected static int time_open_int, time_close_int;
-	static Statement st, st_paras, st_avg;
+	static Statement st, st_paras, st_avg, st_firstday;
 	protected static BufferedReader rd; 
 	protected static ArrayList<String> showparas = new ArrayList<String>();
 
@@ -276,6 +276,7 @@ public class Fundament {
 				out.println(n.getMessage());
 			}
 
+
 		});
 	}
 
@@ -288,6 +289,7 @@ public class Fundament {
 		out.println("\nначало сбора пар по UTC: "+formatted);
 		try {
 			st_paras = conn.createStatement();
+			st_firstday = conn.createStatement();
 			st_paras.executeUpdate("TRUNCATE paras");
 			out.println("таблица с парами очищена и обновляется");
 		} catch (SQLException e1) {
@@ -316,10 +318,14 @@ public class Fundament {
 				insmysql_paras += "(\"" + para + "\",\"" + status + "\",\"" + quoteAsset + "\",\"" + baseAsset + 
 						"\",\"" + ticksize + "\",\"" + stepsize + "\",\"" + minprice + "\",\"" + maxprice +
 						"\");";
+				update_firstday = "update paras set first_day = get_firstdat('"+para+"') where para = '"+para+"'";
+				out.println(update_firstday);
 				try {
 					st_paras.execute(insmysql_paras);
+					st_firstday.execute(update_firstday);
 				} catch (SQLException e) {
 					// TODO Auto-generated catch block
+					out.println(e.getMessage());
 					e.printStackTrace();
 				} catch (NullPointerException n) {
 					out.println(n.getMessage());
