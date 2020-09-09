@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.math.BigDecimal;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.sql.Connection;
@@ -281,6 +282,37 @@ public class Fundament {
 		});
 	}
 
+	protected static void saveamplitude() throws SQLException, NullPointerException {
+		//вычисляем и сохраняем амплитуду пока только в тестовую таблицу с дневными отрезками
+		String sql = "SELECT k.id, k.para, k.low_price, k.max_price, p.ticksize FROM kline_"+interval+" k, paras p where amplitude is null and k.para = p.para limit 1000";
+		try {
+			st_paras = conn.createStatement();
+			st_firstday = conn.createStatement();
+			if (st_paras.execute(sql)) {
+				paranamesresult = st_paras.getResultSet();
+				while (paranamesresult.next()) {
+					int idrecord = paranamesresult.getInt("id");
+					String minprice = paranamesresult.getString("low_price");
+					String maxprice = paranamesresult.getString("max_price");
+					String ticksize = paranamesresult.getString("ticksize");
+					m.ticksizescale = m.getNumberOfDecimalPlaces(new BigDecimal(ticksize));
+					String amplituda = m.getpercampl(minprice,maxprice).setScale(2,BigDecimal.ROUND_HALF_UP).toPlainString();
+					out.println(idrecord+": "+minprice+">>"+maxprice+"="+amplituda);
+					String sqlupdate = "update kline_"+interval+" set amplitude = "+amplituda+" where id = "+idrecord;
+					st_firstday.execute(sqlupdate);
+				}
+			}
+			st_firstday.close();
+			paralastresult.close();
+			st_paras.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			out.println(e.getMessage());
+			e.printStackTrace();
+		} catch (NullPointerException n) {
+			out.println(n.getMessage());
+		}
+	}
 
 	protected static void getparas() throws JSONException, IOException, SQLException, NullPointerException {
 		Date date = new Date();
