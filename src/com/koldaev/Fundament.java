@@ -59,6 +59,7 @@ public class Fundament {
 	protected final static long plus_1m  = Long.parseLong("0000000060000");
 	protected static String intervaltobase, intervaltoapi, ticksize, stepsize, maxprice, minprice;
 	protected static String apipara = "emptystringpara";
+	protected final static Mathematics m = new Mathematics();
 
 	static PreparedStatement paranames, paralast = null;
 	static ResultSet paranamesresult, paralastresult = null;
