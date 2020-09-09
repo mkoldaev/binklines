@@ -3,3 +3,4 @@
 04    0  * * *   root   /scripts/binstat.sh 1d
 20    0  * * 1  root    /scripts/binstat.sh 1w
 25    0  1 * *  root    /scripts/binstat.sh 1M
+#/scripts/binstat.sh 1m EOSUSDT PARASUPDATE CALC
