@@ -79,6 +79,10 @@ public class Fundament {
 	protected final static DateFormat df_day = new SimpleDateFormat("d");
 	protected final static DateFormat df_hour = new SimpleDateFormat("H");
 
+	//ошибка в месячном отрезке больше года!!
+	//'1125', 'DASHBTC', '01.12.2017 00:00:00', '31.12.2018 23:59:59', '0.07624200', '0.09480000', '0.00002400', '0.07322300', '814397.71900000', '53771.86990935', '1512086400000', '1514764799999', '0.04741200', '394900.00'
+	//более 5kk%!))
+	//'3440', 'SYSBTC', '01.07.2018 00:00:00', '31.07.2018 23:59:59', '0.00002701', '96.00000000', '0.00001900', '0.00001931', '453424969.00000000', '42491.55981843', '1530403200000', '1533081599999', '48.00000950', '505263057.89'
 	protected static void setconns() throws SQLException {
 		String host = "localhost";
 		//host = "dockerhub.ru:3311"; //для локального запуска - нужно будет комментировать
@@ -284,7 +288,7 @@ public class Fundament {
 
 	protected static void saveamplitude() throws SQLException, NullPointerException {
 		//вычисляем и сохраняем амплитуду пока только в тестовую таблицу с дневными отрезками
-		String sql = "SELECT k.id, k.para, k.low_price, k.max_price, p.ticksize FROM kline_"+interval+" k, paras p where amplitude is null and k.para = p.para limit 1000";
+		String sql = "SELECT k.id, k.para, k.low_price, k.max_price, p.ticksize FROM kline_"+interval+" k, paras p where amplitude is null and k.para = p.para";
 		try {
 			st_paras = conn.createStatement();
 			st_firstday = conn.createStatement();
