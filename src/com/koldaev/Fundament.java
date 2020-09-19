@@ -21,6 +21,8 @@ import java.util.Date;
 import java.util.Properties;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
+
+import org.apache.commons.lang3.time.DurationFormatUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -83,6 +85,8 @@ public class Fundament {
 	//'1125', 'DASHBTC', '01.12.2017 00:00:00', '31.12.2018 23:59:59', '0.07624200', '0.09480000', '0.00002400', '0.07322300', '814397.71900000', '53771.86990935', '1512086400000', '1514764799999', '0.04741200', '394900.00'
 	//более 5kk%!))
 	//'3440', 'SYSBTC', '01.07.2018 00:00:00', '31.07.2018 23:59:59', '0.00002701', '96.00000000', '0.00001900', '0.00001931', '453424969.00000000', '42491.55981843', '1530403200000', '1533081599999', '48.00000950', '505263057.89'
+	//SELECT * FROM klines.kline_1m where time_open like '%2019%' and time_close like '%2020%' - причем только в декабре
+	//SELECT * FROM klines.kline_1m where (time_open like '%2017%' and time_close like '%2018%') or (time_open like '%2018%' and time_close like '%2019%') or (time_open like '%2019%' and time_close like '%2020%')
 	protected static void setconns() throws SQLException {
 		String host = "localhost";
 		//host = "dockerhub.ru:3311"; //для локального запуска - нужно будет комментировать
@@ -376,10 +380,10 @@ public class Fundament {
 	}
 
 	protected static String convertSecondsToHMmSs(long millis) {
-		// out.println(millis);
+		//здесь если декабрь, неправильно считается закрывающий год! )))
 		Date date = new Date(millis);
-		SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.YYYY HH:mm:ss");
-		formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
+		SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
+		formatter.setTimeZone(TimeZone.getTimeZone("GMT"));
 		String formatted = formatter.format(date);
 		return formatted;
 	}
