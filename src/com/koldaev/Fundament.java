@@ -331,7 +331,7 @@ public class Fundament {
 		try {
 			st_paras = conn.createStatement();
 			st_firstday = conn.createStatement();
-			st_paras.executeUpdate("TRUNCATE paras");
+			st_paras.executeUpdate("TRUNCATE paras"); //вот здесь нельзя очищать - только добавлять нужно!!!
 			out.println("таблица с парами очищена и обновляется");
 		} catch (SQLException e1) {
 			// TODO Auto-generated catch block
@@ -347,7 +347,7 @@ public class Fundament {
 			String status = obj.getString("status").intern();
 			String quoteAsset = obj.getString("quoteAsset").intern();
 			String baseAsset = obj.getString("baseAsset").intern();
-			if (status == "TRADING" && (quoteAsset == "USDT" || quoteAsset == "BTC")) {
+			if (status == "TRADING" && quoteAsset == "USDT" && !baseAsset.contains("UP") && !baseAsset.contains("DOWN")) { //только пары с usdt собираем
 				JSONArray filtersa = obj.getJSONArray("filters");
 			    ticksize = filtersa.getJSONObject(0).getString("tickSize");
 			    stepsize = filtersa.getJSONObject(2).getString("stepSize");
@@ -356,11 +356,11 @@ public class Fundament {
 			    //out.println(para+": ticksize: "+ticksize+"; stepsize: "+stepsize+"; minprice: "+minprice+"; maxprice: "+maxprice);
 				showparas.add(para); // получаем только пары живые с торгами
 				insmysql_paras = "INSERT INTO `paras` (`para`, `status`, `quoteAsset`, `baseAsset`, `ticksize`, `stepsize`, `minprice`, `maxprice`) VALUES ";
-				insmysql_paras += "(\"" + para + "\",\"" + status + "\",\"" + quoteAsset + "\",\"" + baseAsset + 
+				insmysql_paras += "(\"" + para + "\",\"" + status + "\",\"" + quoteAsset + "\",\"" + baseAsset +
 						"\",\"" + ticksize + "\",\"" + stepsize + "\",\"" + minprice + "\",\"" + maxprice +
 						"\");";
 				update_firstday = "update paras set first_day = get_firstdat('"+para+"') where para = '"+para+"'";
-				out.println(update_firstday);
+				//out.println(update_firstday);
 				try {
 					st_paras.execute(insmysql_paras);
 					st_firstday.execute(update_firstday);
@@ -373,7 +373,8 @@ public class Fundament {
 				}
 			}
 		});
-		out.println("Кол-во живых пар с USDT и BTC: " + showparas.size());
+		out.println(showparas);
+		out.println("Кол-во живых пар с USDT: " + showparas.size());
 		date = new Date();
 		formatted = formatter.format(date);
 		out.println("завершение сбора пар по UTC: "+formatted+"\n");
