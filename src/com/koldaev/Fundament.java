@@ -89,7 +89,7 @@ public class Fundament {
 	//SELECT * FROM klines.kline_1m where (time_open like '%2017%' and time_close like '%2018%') or (time_open like '%2018%' and time_close like '%2019%') or (time_open like '%2019%' and time_close like '%2020%')
 	protected static void setconns() throws SQLException {
 		String host = "localhost";
-		host = "dockerhub.ru:3311"; //для локального запуска - нужно будет комментировать
+		//host = "dockerhub.ru:3311"; //для локального запуска - нужно будет комментировать
 		conn = DriverManager.getConnection("jdbc:mysql://"+host+"/klines?allowPublicKeyRetrieval=true&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC", connInfo);
 		conn_paras = DriverManager.getConnection("jdbc:mysql://"+host+"/klines?allowPublicKeyRetrieval=true&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC", connInfo);
 		conn_last = DriverManager.getConnection("jdbc:mysql://"+host+"/klines?allowPublicKeyRetrieval=true&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC", connInfo);
