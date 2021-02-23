@@ -89,7 +89,7 @@ public class Fundament {
 	//SELECT * FROM klines.kline_1m where (time_open like '%2017%' and time_close like '%2018%') or (time_open like '%2018%' and time_close like '%2019%') or (time_open like '%2019%' and time_close like '%2020%')
 	protected static void setconns() throws SQLException {
 		String host = "localhost";
-		//host = "dockerhub.ru:3311"; //для локального запуска - нужно будет комментировать
+		host = "dockerhub.ru:3311"; //для локального запуска - нужно будет комментировать
 		conn = DriverManager.getConnection("jdbc:mysql://"+host+"/klines?allowPublicKeyRetrieval=true&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC", connInfo);
 		conn_paras = DriverManager.getConnection("jdbc:mysql://"+host+"/klines?allowPublicKeyRetrieval=true&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC", connInfo);
 		conn_last = DriverManager.getConnection("jdbc:mysql://"+host+"/klines?allowPublicKeyRetrieval=true&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC", connInfo);
@@ -347,7 +347,7 @@ public class Fundament {
 			String status = obj.getString("status").intern();
 			String quoteAsset = obj.getString("quoteAsset").intern();
 			String baseAsset = obj.getString("baseAsset").intern();
-			if (status == "TRADING" && quoteAsset == "USDT" && !baseAsset.contains("UP") && !baseAsset.contains("DOWN")) { //только пары с usdt собираем
+			if (status == "TRADING" && (quoteAsset == "USDT" || (quoteAsset == "BUSD" && baseAsset == "UFT")) && !baseAsset.contains("UP") && !baseAsset.contains("DOWN")) { //только пары с usdt собираем
 				JSONArray filtersa = obj.getJSONArray("filters");
 			    ticksize = filtersa.getJSONObject(0).getString("tickSize");
 			    stepsize = filtersa.getJSONObject(2).getString("stepSize");
