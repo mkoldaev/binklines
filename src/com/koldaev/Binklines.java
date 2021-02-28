@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.sql.SQLException;
 import org.json.JSONException;
 import com.mashape.unirest.http.exceptions.UnirestException;
-import redis.clients.jedis.exceptions.JedisException;
 
 import static java.lang.System.exit;
 import static java.lang.System.out;
@@ -13,7 +12,7 @@ import static java.lang.System.out;
 //если задан третий с любым словом, то после обработки, происходит выход
 public class Binklines extends Fundament {
 
-	public static void main(String[] args) throws JSONException, IOException, InterruptedException, UnirestException, SQLException, NullPointerException, JedisException {
+	public static void main(String[] args) throws JSONException, IOException, InterruptedException, UnirestException, SQLException, NullPointerException {
 
 		//String l = convertSecondsToHMmSs(1514764799999L);
 		//out.println(l);

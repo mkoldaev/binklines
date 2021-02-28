@@ -15,5 +15,5 @@ then
     echo "$JAVANAME running. Exit."
 else
     echo "$JAVANAME is not running. Begin runing"
-    java -Dname=$JAVANAME -jar /scripts/binklines.jar $1 $2 $3 $4 >> /scripts/$JAVANAME.log
+    java -Dname=$JAVANAME -jar /work/java/binklines.jar $1 $2 $3 $4 >> /work/java/$JAVANAME.log
 fi

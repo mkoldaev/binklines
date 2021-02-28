@@ -9,6 +9,13 @@
           </advancedOptions>
         </fileTransfer>
       </webServer>
+      <webServer id="ba3c074a-2cb3-437c-ab71-5d2902687923" name="dockerjava">
+        <fileTransfer rootFolder="/work/java" accessType="SFTP" host="dockerhub.ru" port="2209" sshConfigId="5afc7a92-e0a9-423f-b7c8-c67d36657aa5" sshConfig="root@dockerhub.ru:2209 password">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" passiveMode="true" shareSSLContext="true" />
+          </advancedOptions>
+        </fileTransfer>
+      </webServer>
     </option>
   </component>
 </project>

@@ -11,7 +11,6 @@
       <element id="library" level="module" name="commons-pool2-2.0.jar" module-name="binklines" />
       <element id="library" level="module" name="commons-collections4-4.1.jar" module-name="binklines" />
       <element id="library" level="module" name="httpasyncclient-cache-4.1.4.jar" module-name="binklines" />
-      <element id="library" level="module" name="mysql-connector-java-8.0.11.jar" module-name="binklines" />
       <element id="library" level="module" name="httpcore-nio-4.4.10.jar" module-name="binklines" />
       <element id="library" level="module" name="json-20180130.jar" module-name="binklines" />
       <element id="library" level="module" name="httpclient-win-4.5.7.jar" module-name="binklines" />
@@ -19,7 +18,6 @@
       <element id="library" level="module" name="httpclient-cache-4.5.7.jar" module-name="binklines" />
       <element id="library" level="module" name="slf4j-api-1.8.0-beta4.jar" module-name="binklines" />
       <element id="library" level="module" name="httpasyncclient-4.1.4.jar" module-name="binklines" />
-      <element id="library" level="module" name="jedis-3.0.1.jar" module-name="binklines" />
       <element id="library" level="module" name="httpclient-osgi-4.5.7.jar" module-name="binklines" />
       <element id="library" level="module" name="httpcore-nio-4.4.11.jar" module-name="binklines" />
       <element id="extracted-dir" path="$PROJECT_DIR$/../!javalibs/commons-codec-1.11.jar" path-in-jar="/" />
@@ -43,11 +41,9 @@
       <element id="extracted-dir" path="$PROJECT_DIR$/../!javalibs/httpcore-nio-4.4.11.jar" path-in-jar="/" />
       <element id="extracted-dir" path="$PROJECT_DIR$/../!javalibs/httpcore-osgi-4.4.11.jar" path-in-jar="/" />
       <element id="extracted-dir" path="$PROJECT_DIR$/../!javalibs/httpmime-4.5.7.jar" path-in-jar="/" />
-      <element id="extracted-dir" path="$PROJECT_DIR$/../!javalibs/jedis-3.0.1.jar" path-in-jar="/" />
       <element id="extracted-dir" path="$PROJECT_DIR$/../!javalibs/jna-4.5.2.jar" path-in-jar="/" />
       <element id="extracted-dir" path="$PROJECT_DIR$/../!javalibs/jna-platform-4.5.2.jar" path-in-jar="/" />
       <element id="extracted-dir" path="$PROJECT_DIR$/../!javalibs/json-20180130.jar" path-in-jar="/" />
-      <element id="extracted-dir" path="$PROJECT_DIR$/../!javalibs/mysql-connector-java-8.0.11.jar" path-in-jar="/" />
       <element id="extracted-dir" path="$PROJECT_DIR$/../!javalibs/slf4j-api-1.8.0-beta4.jar" path-in-jar="/" />
       <element id="extracted-dir" path="$PROJECT_DIR$/../!javalibs/slf4j-simple-1.8.0-beta4.jar" path-in-jar="/" />
       <element id="extracted-dir" path="$PROJECT_DIR$/../!javalibs/unirest-java-1.4.9.jar" path-in-jar="/" />
@@ -58,6 +54,8 @@
       <element id="library" level="module" name="commons-logging-1.2.jar" module-name="binklines" />
       <element id="library" level="module" name="httpmime-4.5.7.jar" module-name="binklines" />
       <element id="library" level="module" name="httpcore-4.4.11.jar" module-name="binklines" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../../javalibs/h2-1.4.200.jar" path-in-jar="/" />
+      <element id="library" level="project" name="h2-1.4.200" />
     </root>
   </artifact>
 </component>

@@ -3,6 +3,7 @@
   <component name="SshConfigs">
     <configs>
       <sshConfig authType="PASSWORD" host="dockerhub.ru" id="6f482871-680d-4b0d-a708-e6d46d351f06" port="2211" nameFormat="DESCRIPTIVE" username="root" />
+      <sshConfig authType="PASSWORD" host="dockerhub.ru" id="5afc7a92-e0a9-423f-b7c8-c67d36657aa5" port="2209" nameFormat="DESCRIPTIVE" username="root" />
     </configs>
   </component>
 </project>
