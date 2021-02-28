@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="ccc48261-47a0-4b60-b65a-a207e8a9ba5b" name="dock_mysql">
+        <fileTransfer rootFolder="/scripts" accessType="SFTP" host="dockerhub.ru" port="2211" sshConfigId="6f482871-680d-4b0d-a708-e6d46d351f06" sshConfig="root@dockerhub.ru:2211 password">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" passiveMode="true" shareSSLContext="true" />
+          </advancedOptions>
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>

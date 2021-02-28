@@ -64,10 +64,10 @@ public class Fundament {
 	protected static String apipara = "emptystringpara";
 	protected final static Mathematics m = new Mathematics();
 
-	static PreparedStatement paranames, paralast = null;
+	static PreparedStatement paranames, paralast, paracheck = null;
 	static ResultSet paranamesresult, paralastresult = null;
 
-	static Connection conn, conn_paras, conn_last = null;
+	static Connection conn, conn_paras, conn_last, conn_check = null;
 	static Properties connInfo = new Properties();
 	static {
 		connInfo.put("characterEncoding", "UTF8");
@@ -89,10 +89,14 @@ public class Fundament {
 	//SELECT * FROM klines.kline_1m where (time_open like '%2017%' and time_close like '%2018%') or (time_open like '%2018%' and time_close like '%2019%') or (time_open like '%2019%' and time_close like '%2020%')
 	protected static void setconns() throws SQLException {
 		String host = "localhost";
-		//host = "dockerhub.ru:3311"; //для локального запуска - нужно будет комментировать
-		conn = DriverManager.getConnection("jdbc:mysql://"+host+"/klines?allowPublicKeyRetrieval=true&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC", connInfo);
-		conn_paras = DriverManager.getConnection("jdbc:mysql://"+host+"/klines?allowPublicKeyRetrieval=true&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC", connInfo);
-		conn_last = DriverManager.getConnection("jdbc:mysql://"+host+"/klines?allowPublicKeyRetrieval=true&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC", connInfo);
+		//host = "dockerhub.ru"; //для локального запуска - нужно будет комментировать
+		String h2_url = "jdbc:h2:tcp://"+host+":9092/~/binbot";
+		String h2_user = "max";
+		String h2_passwd = "zxasqw12";
+		conn = DriverManager.getConnection(h2_url, h2_user, h2_passwd);
+		conn_check= DriverManager.getConnection(h2_url, h2_user, h2_passwd);
+		conn_paras = DriverManager.getConnection(h2_url, h2_user, h2_passwd);
+		conn_last = DriverManager.getConnection(h2_url, h2_user, h2_passwd);
 	}
 	
 	protected static boolean getcurrenttime(long basemillis) {
@@ -153,8 +157,8 @@ public class Fundament {
 		String formatted = formatter.format(date);
 		out.println("\nначало загрузки свечей по UTC: "+formatted);
 
-		String sqlmysql = "SELECT para FROM paras where status = \"TRADING\"";
-		if(!apipara.equals("emptystringpara")) sqlmysql += " and para = \"" + apipara + "\"";
+		String sqlmysql = "SELECT para FROM paras where status = 'TRADING'";
+		if(!apipara.equals("emptystringpara")) sqlmysql += " and para = '" + apipara + "'";
 		//out.println(sqlmysql);
 		
 		paranames = conn_paras.prepareStatement(sqlmysql);
@@ -166,8 +170,8 @@ public class Fundament {
 				para = paranamesresult.getString("para");
 				//out.println("");
 				//здесь нужно обязательно учитывать статус TRADING, иначе будут инсертиться дубликаты, п.ч. последняя статистика ушедшей пары не будет совпадать с текущим временем
-				String mysqllast = "SELECT * FROM klines.kline_" + interval.toLowerCase() + " where para = \"" + para
-						+ "\" order by open_milliseconds desc LIMIT 1";
+				String mysqllast = "SELECT * FROM kline_" + interval.toLowerCase() + " where para = '" + para
+						+ "' order by open_milliseconds desc LIMIT 1";
 				
 				//out.println(mysqllast);
 				paralast = conn_last.prepareStatement(mysqllast);
@@ -249,13 +253,12 @@ public class Fundament {
 
 			try {
 				st = conn.createStatement();
-				st_avg = conn.createStatement();
 			} catch (SQLException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
 			intervaltobase = interval.toLowerCase();
-			insmysql = "INSERT INTO `kline_" + intervaltobase + "` (`para`, `time_open`, `time_close`, `price_open`, `max_price`, `low_price`, `price_close`, `volume`, `count_trades`, `open_milliseconds`, `close_milliseconds`) VALUES ";
+			insmysql = "INSERT INTO kline_" + intervaltobase + " (para, time_open, time_close, price_open, max_price, low_price, price_close, volume, count_trades, open_milliseconds, close_milliseconds) VALUES ";
 
 			print_final = "Открытие в " + time_open_norm;
 			print_final += ", откр цена: " + price_open;
@@ -267,25 +270,9 @@ public class Fundament {
 			// print_final += ", квота ордера: "+quote_asset_volume;
 			print_final += ", сделки: " + count_trades;
 
-			//out.println(print_final);
-
-			insmysql += "(\"" + para + "\",\"" + time_open_norm + "\",\"" + time_close_norm + "\",\"" + price_open
-					+ "\",\"" + max_price + "\",\"" + low_price + "\",\"" + price_close + "\",\"" + volume + "\",\""
-					+ item.get(7).toString() + "\"," + time_open + "," + time_close + ");";
-			//здесь добавляем в таблицу среднее значение через добавленную нашу функцию в базе - avg_two_crypto
-			//средняя цена рассчитывается с фитиля - середины между максимальной и минимальной цены за отрезок времени
-			//это нужно для прогноза тренда монеты
-			update_avg = "update kline_"+intervaltobase+" set price_avg = avg_two_crypto(low_price,max_price) where price_avg is NULL";
-			try {
-				st.execute(insmysql);
-				st_avg.execute(update_avg);
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				out.println(e.getMessage());
-			} catch (NullPointerException n) {
-				out.println(n.getMessage());
-			}
-
+			insmysql += "('" + para + "','" + time_open_norm + "','" + time_close_norm + "','" + price_open
+					+ "','" + max_price + "','" + low_price + "','" + price_close + "','" + volume + "','"
+					+ item.get(7).toString() + "'," + time_open + "," + time_close + ");";
 
 		});
 	}
@@ -331,8 +318,8 @@ public class Fundament {
 		try {
 			st_paras = conn.createStatement();
 			st_firstday = conn.createStatement();
-			st_paras.executeUpdate("TRUNCATE paras"); //вот здесь нельзя очищать - только добавлять нужно!!!
-			out.println("таблица с парами очищена и обновляется");
+			//st_paras.executeUpdate("TRUNCATE table paras;alter sequence paras_id_seq restart with 1;"); //вот здесь нельзя очищать - только добавлять нужно!!!
+			//out.println("таблица с парами очищена и обновляется");
 		} catch (SQLException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
@@ -348,22 +335,41 @@ public class Fundament {
 			String quoteAsset = obj.getString("quoteAsset").intern();
 			String baseAsset = obj.getString("baseAsset").intern();
 			if (status == "TRADING" && (quoteAsset == "USDT" || (quoteAsset == "BUSD" && baseAsset == "UFT")) && !baseAsset.contains("UP") && !baseAsset.contains("DOWN")) { //только пары с usdt собираем
-				JSONArray filtersa = obj.getJSONArray("filters");
-			    ticksize = filtersa.getJSONObject(0).getString("tickSize");
-			    stepsize = filtersa.getJSONObject(2).getString("stepSize");
-			    minprice = filtersa.getJSONObject(0).getString("minPrice");
-			    maxprice = filtersa.getJSONObject(0).getString("maxPrice");
-			    //out.println(para+": ticksize: "+ticksize+"; stepsize: "+stepsize+"; minprice: "+minprice+"; maxprice: "+maxprice);
-				showparas.add(para); // получаем только пары живые с торгами
-				insmysql_paras = "INSERT INTO `paras` (`para`, `status`, `quoteAsset`, `baseAsset`, `ticksize`, `stepsize`, `minprice`, `maxprice`) VALUES ";
-				insmysql_paras += "(\"" + para + "\",\"" + status + "\",\"" + quoteAsset + "\",\"" + baseAsset +
-						"\",\"" + ticksize + "\",\"" + stepsize + "\",\"" + minprice + "\",\"" + maxprice +
-						"\");";
-				update_firstday = "update paras set first_day = get_firstdat('"+para+"') where para = '"+para+"'";
-				//out.println(update_firstday);
+				String check_sql = "select para, first_day from paras where para = '"+para+"'";
+				String checkpara = "";
+				String checkfirstday = "";
 				try {
-					st_paras.execute(insmysql_paras);
-					st_firstday.execute(update_firstday);
+					paracheck = conn_check.prepareStatement(check_sql);
+					if (paracheck.execute()) {
+						ResultSet r = paracheck.getResultSet();
+						if (r.first()) {
+							checkpara = r.getString("para");
+							checkfirstday = r.getString("first_day");
+						}
+					}
+					paracheck.close();
+				} catch (Exception e) {
+					out.println(e.getMessage());
+				}
+				if(checkpara.equals("")) {
+					out.println("para "+para+" не обнаружена");
+					JSONArray filtersa = obj.getJSONArray("filters");
+					ticksize = filtersa.getJSONObject(0).getString("tickSize");
+					stepsize = filtersa.getJSONObject(2).getString("stepSize");
+					minprice = filtersa.getJSONObject(0).getString("minPrice");
+					maxprice = filtersa.getJSONObject(0).getString("maxPrice");
+					//out.println(para+": ticksize: "+ticksize+"; stepsize: "+stepsize+"; minprice: "+minprice+"; maxprice: "+maxprice);
+					showparas.add(para); // получаем только пары живые с торгами
+					insmysql_paras = "INSERT INTO paras (para, status, quoteAsset, baseAsset, ticksize, stepsize, minprice, maxprice) VALUES ";
+					insmysql_paras += "('" + para + "','" + status + "','" + quoteAsset + "','" + baseAsset +
+							"','" + ticksize + "','" + stepsize + "','" + minprice + "','" + maxprice +
+							"');";
+					//update_firstday = "update paras set first_day = get_firstdat('"+para+"') where para = '"+para+"'";
+				}
+				update_firstday = "update paras set first_day = (SELECT CONCAT(open_milliseconds, '__', SUBSTRING(time_open,1,10)) as firstday from kline_1d where open_milliseconds = (SELECT min(open_milliseconds) FROM kline_1d where para = '"+para+"') and para = '"+para+"') where para = '"+para+"'";
+				try {
+					if(checkpara.equals("")) st_paras.execute(insmysql_paras);
+					if(checkfirstday.equals("")) st_firstday.execute(update_firstday);
 				} catch (SQLException e) {
 					// TODO Auto-generated catch block
 					out.println(e.getMessage());

@@ -1,0 +1,36 @@
+<component name="libraryTable">
+  <library name="commons-codec-1.11">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/../!javalibs/commons-codec-1.11.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../!javalibs/commons-collections4-4.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../!javalibs/commons-lang3-3.7.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../!javalibs/commons-logging-1.2.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../!javalibs/commons-pool2-2.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../!javalibs/fluent-hc-4.5.7.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../!javalibs/httpasyncclient-4.1.4.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../!javalibs/httpasyncclient-cache-4.1.4.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../!javalibs/httpclient-4.5.6.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../!javalibs/httpclient-4.5.7.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../!javalibs/httpclient-cache-4.5.6.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../!javalibs/httpclient-cache-4.5.7.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../!javalibs/httpclient-osgi-4.5.7.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../!javalibs/httpclient-win-4.5.7.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../!javalibs/httpcore-4.4.10.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../!javalibs/httpcore-4.4.11.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../!javalibs/httpcore-ab-4.4.11.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../!javalibs/httpcore-nio-4.4.10.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../!javalibs/httpcore-nio-4.4.11.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../!javalibs/httpcore-osgi-4.4.11.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../!javalibs/httpmime-4.5.7.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../!javalibs/jedis-3.0.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../!javalibs/jna-4.5.2.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../!javalibs/jna-platform-4.5.2.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../!javalibs/json-20180130.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../!javalibs/slf4j-api-1.8.0-beta4.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../!javalibs/slf4j-simple-1.8.0-beta4.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../!javalibs/unirest-java-1.4.9.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
