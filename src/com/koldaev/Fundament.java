@@ -254,7 +254,7 @@ public class Fundament {
 			try {
 				st = conn.createStatement();
 			} catch (SQLException e1) {
-				// TODO Auto-generated catch block
+				// TODO Auto-generated catch block			insmysql += "('" + para + "','" + time_open_norm + "','" + time_close_norm + "','" + price_open
 				e1.printStackTrace();
 			}
 			intervaltobase = interval.toLowerCase();
@@ -273,6 +273,20 @@ public class Fundament {
 			insmysql += "('" + para + "','" + time_open_norm + "','" + time_close_norm + "','" + price_open
 					+ "','" + max_price + "','" + low_price + "','" + price_close + "','" + volume + "','"
 					+ item.get(7).toString() + "'," + time_open + "," + time_close + ");";
+
+			//здесь добавляем в таблицу среднее значение через добавленную нашу функцию в базе - avg_two_crypto
+			//средняя цена рассчитывается с фитиля - середины между максимальной и минимальной цены за отрезок времени
+			//это нужно для прогноза тренда монеты
+			//update_avg = "update kline_"+intervaltobase+" set price_avg = avg_two_crypto(low_price,max_price) where price_avg is NULL";
+			try {
+				st.execute(insmysql);
+				//st_avg.execute(update_avg);
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				out.println(e.getMessage());
+			} catch (NullPointerException n) {
+				out.println(n.getMessage());
+			}
 
 		});
 	}
