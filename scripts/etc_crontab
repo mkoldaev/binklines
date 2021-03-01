@@ -2,9 +2,10 @@
 #45    *  * * *  root  echo "publish binbotredis reloadparas" | redis-cli
 
 */15  *  * * *   root   /work/java/binstat.sh 155m EOSUSDT PARASUPDATE
-02    3  * * *   root   /work/java/binstat.sh 1d
-20    3  * * 1  root    /work/java/binstat.sh 1w
-25    3  1 * *  root    /work/java/binstat.sh 1M
+04    03  * * *   root   /work/java/binstat.sh 1d
+15    03  * * 1  root    /work/java/binstat.sh 1w
+20    03  1 * *  root    /work/java/binstat.sh 1M
 #45    3  1 * *  root    /work/java/binstat.sh 1M EOSUSDT PARASUPDATE CALC
 #55    3  * * *   root   /work/java/binstat.sh 1d EOSUSDT PARASUPDATE CALC
 #59    3  * * 1  root    /work/java/binstat.sh 1w EOSUSDT PARASUPDATE CALC
+
