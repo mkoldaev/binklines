@@ -348,7 +348,7 @@ public class Fundament {
 			String status = obj.getString("status").intern();
 			String quoteAsset = obj.getString("quoteAsset").intern();
 			String baseAsset = obj.getString("baseAsset").intern();
-			if (status == "TRADING" && (quoteAsset == "USDT" || (quoteAsset == "BUSD" && baseAsset == "UFT")) && !baseAsset.contains("UP") && !baseAsset.contains("DOWN")) { //только пары с usdt собираем
+			if (status == "TRADING" && (quoteAsset == "USDT" || quoteAsset == "BUSD") && !baseAsset.contains("UP") && !baseAsset.contains("DOWN")) { //только пары с usdt собираем
 				String check_sql = "select para, first_day from paras where para = '"+para+"'";
 				String checkpara = "";
 				String checkfirstday = "";
@@ -394,7 +394,7 @@ public class Fundament {
 			}
 		});
 		out.println(showparas);
-		out.println("Кол-во живых пар с USDT: " + showparas.size());
+		out.println("Кол-во живых пар с USDT/BUSD: " + showparas.size());
 		date = new Date();
 		formatted = formatter.format(date);
 		out.println("завершение сбора пар по UTC: "+formatted+"\n");
