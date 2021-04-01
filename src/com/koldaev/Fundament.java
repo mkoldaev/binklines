@@ -91,8 +91,8 @@ public class Fundament {
 		String host = "localhost";
 		//host = "dockerhub.ru"; //для локального запуска - нужно будет комментировать
 		String h2_url = "jdbc:h2:tcp://"+host+":9092/~/binbot";
-		String h2_user = "max";
-		String h2_passwd = "zxasqw12";
+		String h2_user = "--";
+		String h2_passwd = "---";
 		conn = DriverManager.getConnection(h2_url, h2_user, h2_passwd);
 		conn_check= DriverManager.getConnection(h2_url, h2_user, h2_passwd);
 		conn_paras = DriverManager.getConnection(h2_url, h2_user, h2_passwd);
