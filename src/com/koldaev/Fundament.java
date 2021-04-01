@@ -71,8 +71,8 @@ public class Fundament {
 	static Properties connInfo = new Properties();
 	static {
 		connInfo.put("characterEncoding", "UTF8");
-		connInfo.put("user", "root");
-		connInfo.put("password", "vnfhry46");
+		connInfo.put("user", "--");
+		connInfo.put("password", "---");
 	}
 
 	protected final static DateFormat df_year = new SimpleDateFormat("y");
